@@ -1,21 +1,28 @@
-package ex01;
-
-public class Merylpor {
-    public static void main(String[] args) {
-//        int
-//        n = input("n=")
-//        lst=[2]
-//        for i in xrange(3, n+1, 2):
-//        if (i > 10) and (i%10==5):
-//        continue
-//        for j in lst:
-//        if j*j-1 > i:
-//        lst.append(i)
-//        break
-//        if (i % j == 0):
-//        break
-//	else:
-//        lst.append(i)
-//        print lst
-    }
-}
+//package ex01;
+//
+//import java.util.Scanner;
+//
+//
+//public class Merylpor {
+//    public static void main(String[] args) {
+//        Scanner in = new Scanner(System.in);
+//        String str = "true";
+//        int inputNumber = in.nextInt();
+//        if (inputNumber <= 1) {
+//            System.err.println("Illegal Argument");
+//            in.close();
+//            System.exit(-1);
+//        }
+//        int iterations = 1;
+//        for (int i = 2; i * i <= inputNumber; ++i) {
+//            if (inputNumber % i == 0) {
+//                str = "false";
+//                break;
+//            }
+//            else
+//                ++iterations;
+//        }
+//        System.out.println(str + " " + iterations);
+//        in.close();
+//    }
+//}
