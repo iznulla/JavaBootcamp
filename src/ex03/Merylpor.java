@@ -8,12 +8,14 @@ public class Merylpor {
         for (int i = 0; i < 18; ++i) {
             int rr = 10;
             Scanner in = new Scanner(System.in);
-            if (in.next().equals("42")) {
+            String inpNum = in.next();
+            rr = getMinimum(rr, getNumber(inpNum));
+            if (inpNum.equals("42")) {
                 break;
             }
             in.useDelimiter("");
             while (in.hasNext()){
-                String inpNum = in.next();
+                inpNum = in.next();
                 if (inpNum.equals(" "))
                     continue;
                 if (inpNum.equals("\n"))
@@ -54,6 +56,8 @@ public class Merylpor {
             number = 8;
         else if (num.equals("9"))
             number = 9;
+        else if (num.equals("42"))
+            number = 42;
         else {
             System.err.println("Illegal Argument");
             System.exit(-1);
