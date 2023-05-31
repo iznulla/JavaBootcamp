@@ -5,18 +5,22 @@ import java.util.Scanner;
 public class Merylpor {
     public static void main(String[] args) {
         int res = 0;
-        for (int i = 0; i <= 18; ++i) {
+        for (int i = 0; i < 18; ++i) {
             int rr = 10;
             Scanner in = new Scanner(System.in);
+            if (in.next().equals("42")) {
+                break;
+            }
             in.useDelimiter("");
-            while (in.hasNext()) {
-                char inpNum = in.next().charAt(0);
-                if (inpNum == ' ')
+            while (in.hasNext()){
+                String inpNum = in.next();
+                if (inpNum.equals(" "))
                     continue;
-                if (inpNum == '\n' || inpNum == 42)
+                if (inpNum.equals("\n"))
                     break;
                 rr = getMinimum(rr, getNumber(inpNum));
             }
+
             res = completeInt(res, rr);
         }
         res = reverseNum(res);
@@ -30,26 +34,30 @@ public class Merylpor {
         }
     }
 
-    private static int getNumber (char num) {
+    private static int getNumber (String num) {
         int number = 0;
-        if (num == '1')
+        if (num.equals("1"))
             number = 1;
-        if (num == '2')
+        else if (num.equals("2"))
             number = 2;
-        if (num == '3')
+        else if (num.equals("3"))
             number = 3;
-        if (num == '4')
+        else if (num.equals("4"))
             number = 4;
-        if (num == '5')
+        else if (num.equals("5"))
             number = 5;
-        if (num == '6')
+        else if (num.equals("6"))
             number = 6;
-        if (num == '7')
+        else if (num.equals("7"))
             number = 7;
-        if (num == '8')
+        else if (num.equals("8"))
             number = 8;
-        if (num == '9')
+        else if (num.equals("9"))
             number = 9;
+        else {
+            System.err.println("Illegal Argument");
+            System.exit(-1);
+        }
         return number;
     }
 
@@ -67,12 +75,12 @@ public class Merylpor {
     }
 
     private static int reverseNum(int num) {
-        int rr = 0;
+        int result = 0;
         while (num > 0) {
             int count = num % 10;
-            rr = completeInt(rr, count);
+            result = completeInt(result, count);
             num /= 10;
         }
-        return rr;
+        return result;
     }
 }
