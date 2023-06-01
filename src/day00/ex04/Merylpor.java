@@ -1,4 +1,4 @@
-package ex04;
+package day00.ex04;
 
 import java.util.Scanner;
 

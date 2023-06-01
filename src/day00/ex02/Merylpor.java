@@ -1,4 +1,4 @@
-package ex02;
+package day00.ex02;
 
 import jdk.nashorn.internal.ir.WhileNode;
 

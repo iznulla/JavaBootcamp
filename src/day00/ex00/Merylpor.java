@@ -1,4 +1,4 @@
-package ex00;
+package day00.ex00;
 
 public class Merylpor {
     public static void main(String[] args) {
