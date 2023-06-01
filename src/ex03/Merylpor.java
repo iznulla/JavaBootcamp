@@ -59,7 +59,7 @@ public class Merylpor {
         else if (num.equals("42"))
             number = 42;
         else {
-            System.err.println("Illegal Argument");
+            System.err.println("IllegalArgument");
             System.exit(-1);
         }
         return number;
