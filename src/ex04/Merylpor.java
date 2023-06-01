@@ -40,23 +40,18 @@ public class Merylpor {
     }
 
     private static void sort(char[][] chArray, int count) {
-        for (int i = 0; i < count; ++i) {
-            if (chArray[i + 1][1] > chArray[i][1]) {
-                char[][] temp = new char[1][2];
-                temp[0][0] = chArray[i][0];
-                temp[0][1] = chArray[i][1];
-                chArray[i][0] = chArray[i + 1][0];
-                chArray[i][1] = chArray[i + 1][1];
-                chArray[i + 1][0] = temp[0][0];
-                chArray[i + 1][1] = temp[0][1];
-            } else if (chArray[i + 1][1] == chArray[i][1] && chArray[i + 1][0] > chArray[i][0]) {
-                char[][] temp = new char[1][2];
-                temp[0][0] = chArray[i][0];
-                temp[0][1] = chArray[i][1];
-                chArray[i][0] = chArray[i + 1][0];
-                chArray[i][1] = chArray[i + 1][1];
-                chArray[i + 1][0] = temp[0][0];
-                chArray[i + 1][1] = temp[0][1];
+        for (int j = 0; j < count; ++j) {
+            for (int i = 0; i < count - j - 1; ++i) {
+                if (chArray[i + 1][1] > chArray[i][1]) {
+                    char[] temp = chArray[i];
+                    chArray[i] = chArray[i + 1];
+                    chArray[i + 1] = temp;
+                }
+                if (chArray[i + 1][0] < chArray[i][0] && chArray[i + 1][1] == chArray[i][1]) {
+                    char[] temp = chArray[i];
+                    chArray[i] = chArray[i + 1];
+                    chArray[i + 1] = temp;
+                }
             }
         }
     }
