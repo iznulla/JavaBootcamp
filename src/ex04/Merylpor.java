@@ -5,8 +5,7 @@ import java.util.Scanner;
 public class Merylpor {
     public static void main(String[] args) {
         Scanner in = new Scanner(System.in);
-        String inpLine = in.nextLine();
-        char[] line = inpLine.toCharArray();
+        char[] line = in.nextLine().toCharArray();
         in.close();
 
         int countLine = 0;
