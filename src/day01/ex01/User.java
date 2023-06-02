@@ -1,19 +1,18 @@
-package day01.ex00;
+package day01.ex01;
 
 public class User {
+  private final Integer id;
+  private String name;
+  private Integer balance;
 
-  User(Integer identifier, String name, int balance) {
-    this.identifier = identifier;
+  User(String name, int balance) {
+    this.id = UserIdsGenerator.getInstance().generateId();
     this.name = name;
     this.balance = balance;
   }
 
-  private final Integer identifier;
-  private String name;
-  private Integer balance;
-
   public Integer getIdentifier() {
-    return identifier;
+    return id;
   }
 
   public String getName() {
@@ -32,3 +31,4 @@ public class User {
     this.balance = value;
   }
 }
+

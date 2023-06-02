@@ -29,11 +29,11 @@ public class Transaction {
 
     }
 
-    UUID identifier = UUID.randomUUID();
-    User recipient;
-    User sender;
-    TransCategory transCategory;
-    Integer amount;
+    private UUID identifier = UUID.randomUUID();
+    private User recipient;
+    private User sender;
+    private TransCategory transCategory;
+    private Integer amount;
 
     public UUID getIdentifier() {
         return identifier;
