@@ -3,7 +3,7 @@ package day01.ex00;
 public class Program {
 
   public static void main(String[] args) {
-    User ayrat = new User(1234, "Ayrat", 2000 );
+    User ayrat = new User(1234, "Ayrat", 2000);
     User sasa = new User(2345, "Sasa", 3000);
 
     System.out.println("ID - " + ayrat.getIdentifier() +

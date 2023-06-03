@@ -4,7 +4,7 @@ import jdk.nashorn.internal.ir.WhileNode;
 
 import java.util.Scanner;
 
-public class Merylpor {
+public class Program {
     public static void main(String[] args) {
         int count = 0;
         while (true) {

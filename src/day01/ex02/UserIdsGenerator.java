@@ -2,20 +2,20 @@ package day01.ex02;
 
 public class UserIdsGenerator {
 
-    private static UserIdsGenerator instance;
-    private static Integer generateId = 1;
+  private static UserIdsGenerator instance;
+  private static Integer generateId = 1;
 
-    private UserIdsGenerator() {
-    }
+  private UserIdsGenerator() {
+  }
 
-    public static UserIdsGenerator getInstance() {
-        if (instance == null) {
-            instance = new UserIdsGenerator();
-        }
-        return instance;
+  public static UserIdsGenerator getInstance() {
+    if (instance == null) {
+      instance = new UserIdsGenerator();
     }
+    return instance;
+  }
 
-    public Integer generateId() {
-        return generateId++;
-    }
+  public Integer generateId() {
+    return generateId++;
+  }
 }

@@ -2,7 +2,7 @@ package day00.ex03;
 
 import java.util.Scanner;
 
-public class Merylpor {
+public class Program {
     public static void main(String[] args) {
         int res = 0;
         for (int i = 0; i < 18; ++i) {

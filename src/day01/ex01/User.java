@@ -1,6 +1,7 @@
 package day01.ex01;
 
 public class User {
+
   private final Integer id;
   private String name;
   private Integer balance;

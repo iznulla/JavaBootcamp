@@ -2,35 +2,36 @@ package day01.ex02;
 
 
 public class User {
-    private final Integer id;
-    private String name;
-    private Integer balance;
 
-    User(String name, int balance) {
-        this.id = UserIdsGenerator.getInstance().generateId();
-        this.name = name;
-        this.balance = balance;
-    }
+  private final Integer id;
+  private String name;
+  private Integer balance;
 
-    public Integer getId() {
-        return id;
-    }
+  User(String name, int balance) {
+    this.id = UserIdsGenerator.getInstance().generateId();
+    this.name = name;
+    this.balance = balance;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public Integer getBalance() {
-        return balance;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String value) {
-        this.name = value;
-    }
+  public Integer getBalance() {
+    return balance;
+  }
 
-    public void setBalance(Integer value) {
-        this.balance = value;
-    }
+  public void setName(String value) {
+    this.name = value;
+  }
+
+  public void setBalance(Integer value) {
+    this.balance = value;
+  }
 
 }
 

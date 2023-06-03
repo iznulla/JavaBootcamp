@@ -24,23 +24,23 @@ public class UsersArrayList implements UserList {
   public User getUserById(Integer value) {
     User userFound = null;
     for (int i = 0; i < this.userNumber; ++i) {
-        if (this.userArray[i].getId().equals(value)) {
-            userFound = this.userArray[i];
-        }
-    }
-      if (userFound == null) {
-          throw new UserNotFoundException("User not found");
+      if (this.userArray[i].getId().equals(value)) {
+        userFound = this.userArray[i];
       }
+    }
+    if (userFound == null) {
+      throw new UserNotFoundException("User not found");
+    }
     return userFound;
   }
 
   @Override
   public User getUserByIndex(int value) {
-      if (value >= this.userNumber || value < 0) {
-          throw new UserNotFoundException("User not found");
-      } else {
-          return this.userArray[value];
-      }
+    if (value >= this.userNumber || value < 0) {
+      throw new UserNotFoundException("User not found");
+    } else {
+      return this.userArray[value];
+    }
   }
 
   @Override
@@ -51,9 +51,9 @@ public class UsersArrayList implements UserList {
   private void reserve() {
     this.capacity += 10;
     User[] temp = new User[this.capacity];
-      for (int i = 0; i < userNumber; ++i) {
-          temp[i] = userArray[i];
-      }
+    for (int i = 0; i < userNumber; ++i) {
+      temp[i] = userArray[i];
+    }
     userArray = temp;
   }
 }
