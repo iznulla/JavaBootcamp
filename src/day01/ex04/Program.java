@@ -1,11 +1,12 @@
-package day01.ex03;
+package day01.ex04;
+
 
 
 public class Program {
 
   public static void main(String[] args) {
     User ayrat = new User("Ayrat", 2000);
-    User sasa = new User("Sasa", 3000);
+    User sasa = new User( "Sasa", 3000);
 
     System.out.println("ID - " + ayrat.getId() +
         ", name - " + ayrat.getName() +
@@ -43,8 +44,8 @@ public class Program {
     lst.addTransaction(tr_1);
 
     Transaction[] transactionsArray_1 = lst.toArray();
-//
-    for (Transaction t : transactionsArray_1) {
+
+    for (Transaction t: transactionsArray_1) {
       System.out.println("id From Trans Array 1 ||| " + t.getIdentifier());
     }
     System.out.println();
@@ -52,7 +53,7 @@ public class Program {
 
     Transaction[] transactionsArray_2 = lst.toArray();
 
-    for (Transaction t : transactionsArray_2) {
+    for (Transaction t: transactionsArray_2) {
       System.out.println("id From Trans Array 2 ||| " + t.getIdentifier());
     }
     System.out.println();
@@ -61,9 +62,8 @@ public class Program {
 
     Transaction[] transactionsArray_3 = lst.toArray();
 
-    for (Transaction t : transactionsArray_3) {
+    for (Transaction t: transactionsArray_3) {
       System.out.println("id From Trans Array 3 ||| " + t.getIdentifier());
     }
   }
 }
-
