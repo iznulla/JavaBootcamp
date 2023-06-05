@@ -1,69 +1,55 @@
 package day01.ex04;
 
-
-
 public class Program {
 
   public static void main(String[] args) {
     User ayrat = new User("Ayrat", 2000);
-    User sasa = new User( "Sasa", 3000);
+    User sasa = new User("Sasa", 3000);
+    User masa = new User("masa", 5000);
 
-    System.out.println("ID - " + ayrat.getId() +
-        ", name - " + ayrat.getName() +
-        ", balance - " + ayrat.getBalance());
+    TransactionsService trService = new TransactionsService();
 
-    System.out.println("ID - " + sasa.getId() +
-        ", name - " + sasa.getName() +
-        ", balance - " + sasa.getBalance());
+    trService.addUser(ayrat);
+    trService.addUser(sasa);
+    trService.addUser(masa);
 
-    Transaction tr_ayrat_to_sasa = new Transaction(ayrat, sasa, TransCategory.credits, -60);
-    Transaction tr_sasa_to_ayrat = new Transaction(sasa, ayrat, TransCategory.debits, 90);
-    Transaction tr_1 = new Transaction(sasa, ayrat, TransCategory.debits, 30);
+    int ayrat_balance = trService.getBalanceById(ayrat.getId());
+    int sasa_balance = trService.getBalanceById(sasa.getId());
+    int masa_balance = trService.getBalanceById(masa.getId());
 
-    System.out.println("ID - " + tr_ayrat_to_sasa.getIdentifier() +
-        ", Recipient - " + tr_ayrat_to_sasa.getRecipient().getName() +
-        ", Sender - " + tr_ayrat_to_sasa.getSender().getName() +
-        ", Transfer category - " + tr_ayrat_to_sasa.getTransCategory() +
-        ", Transfer amount - " + tr_ayrat_to_sasa.getAmount());
+    System.out.println("Ayrat balance before - " + ayrat_balance);
+    System.out.println("Sasa balance before - " + sasa_balance);
+    System.out.println("Masa balance after - " + masa_balance);
 
-    System.out.println("ID - " + tr_sasa_to_ayrat.getIdentifier() +
-        ", Recipient - " + tr_sasa_to_ayrat.getRecipient().getName() +
-        ", Sender - " + tr_sasa_to_ayrat.getSender().getName() +
-        ", Transfer category - " + tr_sasa_to_ayrat.getTransCategory() +
-        ", Transfer amount - " + tr_sasa_to_ayrat.getAmount());
+    System.out.println("____________________________________________________________");
 
-    System.out.println("ID - " + tr_1.getIdentifier() +
-        ", Recipient - " + tr_1.getRecipient().getName() +
-        ", Sender - " + tr_1.getSender().getName() +
-        ", Transfer category - " + tr_1.getTransCategory() +
-        ", Transfer amount - " + tr_1.getAmount());
+    trService.newTransaction(ayrat.getId(), sasa.getId(), 60);
+    trService.newTransaction(sasa.getId(), ayrat.getId(), 125);
+    trService.newTransaction(sasa.getId(), masa.getId(), 230);
+    trService.newTransaction(masa.getId(), ayrat.getId(), 320);
 
-    TransactionsList lst = new TransactionsLinkedList();
-    lst.addTransaction(tr_ayrat_to_sasa);
-    lst.addTransaction(tr_sasa_to_ayrat);
-    lst.addTransaction(tr_1);
+    ayrat_balance = trService.getBalanceById(ayrat.getId());
+    sasa_balance = trService.getBalanceById(sasa.getId());
+    masa_balance = trService.getBalanceById(masa.getId());
 
-    Transaction[] transactionsArray_1 = lst.toArray();
+    System.out.println("Ayrat balance after - " + ayrat_balance);
+    System.out.println("Sasa balance after - " + sasa_balance);
+    System.out.println("Masa balance after - " + masa_balance);
 
-    for (Transaction t: transactionsArray_1) {
-      System.out.println("id From Trans Array 1 ||| " + t.getIdentifier());
+    System.out.println("____________________________________________________________");
+
+    Transaction[] ayrat_trnsc = trService.getTransactionsArray(ayrat.getId());
+    for (Transaction t : ayrat_trnsc) {
+      System.out.println("Ayrat Transactions before remove - " + t.getAmount());
     }
-    System.out.println();
-    lst.eraseTransactionById(tr_1.getIdentifier());
 
-    Transaction[] transactionsArray_2 = lst.toArray();
+    System.out.println("____________________________________________________________");
 
-    for (Transaction t: transactionsArray_2) {
-      System.out.println("id From Trans Array 2 ||| " + t.getIdentifier());
-    }
-    System.out.println();
+    trService.eraseTransaction(ayrat_trnsc[1].getIdentifier(), ayrat.getId());
 
-    lst.eraseTransactionById(tr_sasa_to_ayrat.getIdentifier());
-
-    Transaction[] transactionsArray_3 = lst.toArray();
-
-    for (Transaction t: transactionsArray_3) {
-      System.out.println("id From Trans Array 3 ||| " + t.getIdentifier());
+    ayrat_trnsc = trService.getTransactionsArray(ayrat.getId());
+    for (Transaction t : ayrat_trnsc) {
+      System.out.println("Ayrat Transactions after remove - " + t.getAmount());
     }
   }
 }
