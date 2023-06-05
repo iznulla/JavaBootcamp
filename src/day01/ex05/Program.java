@@ -26,26 +26,42 @@ public class Program {
         System.out.println("Enter a user ID");
         Scanner in_1 = new Scanner(System.in);
         Integer uId = in_1.nextInt();
-        System.out.println(userLst.getUserById(uId).getName() + " - " + userLst.getUserById(uId).getBalance());
+        try {
+          System.out.println(userLst.getUserById(uId).getName() + " - " + userLst.getUserById(uId).getBalance());
+        }
+        catch (UserNotFoundException e) {
+          System.out.println(e.getMessage());
+        }
       } else if (str.equals("3")) {
         System.out.println("Enter a sender ID, a recipient ID, and a transfer amount");
         Scanner in_1 = new Scanner(System.in);
         Integer recipientId = in_1.nextInt();
         Integer senderId = in_1.nextInt();
         Integer amount = in_1.nextInt();
-        trnService.newTransaction(senderId, recipientId, amount);
-        System.out.println("The transfer is complete");
+        try {
+          trnService.newTransaction(senderId, recipientId, amount);
+          System.out.println("The transfer is complete");
+        }
+        catch (UserNotFoundException e) {
+          System.out.println(e.getMessage());
+        }
+
       } else if (str.equals("4")) {
         System.out.println("Enter a user ID");
         Scanner in_1 = new Scanner(System.in);
         Integer uId = in_1.nextInt();
-        Transaction[] array = trnService.getTransactionsArray(uId);
-        for (Transaction t : array) {
-          if (!t.getRecipient().getId().equals(uId)) {
-            System.out.println(
-                "To " + t.getRecipient().getName() + "(id = " + t.getRecipient().getId() + ") " +
-                    t.getAmount() + " with id = " + t.getIdentifier());
+        try {
+          Transaction[] array = trnService.getTransactionsArray(uId);
+          for (Transaction t : array) {
+            if (!t.getRecipient().getId().equals(uId)) {
+              System.out.println(
+                  "To " + t.getRecipient().getName() + "(id = " + t.getRecipient().getId() + ") " +
+                      t.getAmount() + " with id = " + t.getIdentifier());
+            }
           }
+        }
+        catch (UserNotFoundException e) {
+          System.out.println(e.getMessage());
         }
       } else if (str.equals("5")) {
         System.out.println("Enter a user ID and a transfer ID");
@@ -54,14 +70,19 @@ public class Program {
         String transId = in_1.next();
         try {
           trnService.eraseTransaction(UUID.fromString(transId), usrId);
-          System.out.println("The transfer is complete");
+          Transaction[] array = trnService.getTransactionsArray(usrId);
+          for (Transaction t : array) {
+            if (!t.getRecipient().getId().equals(usrId)) {
+              System.out.println("Transfer To " + t.getRecipient().getName() + "(id = " +
+                  t.getRecipient().getId() + ") " + t.getAmount() + " removed");
+            }
+          }
         }
-        catch (IllegalTransactionException e) {
+        catch (IllegalArgumentException | IllegalTransactionException | UserNotFoundException | TransactionNotFoundException e) {
           System.out.println(e.getMessage());
         }
       }
     }
-//    System.out.println(trnService.getBalanceById(userLst.getUserNumber()));
   }
   public static void printStart() {
     System.out.println("1. Add a user\n"
