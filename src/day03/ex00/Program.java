@@ -1,4 +1,4 @@
-package day03;
+package day03.ex00;
 
 public class Program {
 
@@ -9,8 +9,8 @@ public class Program {
       System.exit(-1);
     }
     int count = Integer.parseInt((args[0].substring("--count=".length())));
-    HenThread henThread = new HenThread(count);
-    EggThread eggThread = new EggThread(count);
+    MyThread henThread = new MyThread(count, "Hen");
+    MyThread eggThread = new MyThread(count, "Egg");
 
     eggThread.start();
     henThread.start();
@@ -23,26 +23,18 @@ public class Program {
   }
 }
 
-class HenThread extends Thread {
+class MyThread extends Thread {
+
   int count;
-  HenThread(int count) {
+  String result;
+  MyThread(int count, String value) {
     this.count = count;
+    this.result = value;
   }
 
   public void run() {
-    for (int i = 0; i < count; ++i)
-      System.out.println("Hen");
-  }
-}
-
-class EggThread extends Thread {
-  int count;
-  EggThread(int count) {
-    this.count = count;
-  }
-
-  public void run() {
-    for (int i = 0; i < count; ++i)
-      System.out.println("Egg");
+    for (int i = 0; i < count; ++i) {
+      System.out.println(this.result);
+    }
   }
 }
