@@ -7,13 +7,17 @@ import java.util.Scanner;
 public class Program {
 
   public static void main(String[] args) {
+    String report = "./result.txt";
+    String pathToSignatures = "signatures.txt";
+//    System.out.println(Files.exists(Paths.get(pathToSignatures)));
+
     FindSignature signatures = new FindSignature();
     int size = signatures.getSignaturesFromSignature(
-        "/Users/merylpor/Desktop/JavaButcamp/src/day02/ex00/signatures.txt");
+        pathToSignatures);
     FileWriter outputStream = null;
     try {
       Scanner in = new Scanner(System.in);
-      outputStream = new FileWriter("/Users/merylpor/Desktop/JavaButcamp/src/day02/ex00/resulT.txt",
+      outputStream = new FileWriter(report,
           true);
       while (in.hasNext()) {
         String path = in.next();
