@@ -15,7 +15,7 @@ public class TaskThread extends Thread{
   }
 
 
-  public void run() {
+  public synchronized void run() {
     List<Thread> threads = new ArrayList<>();
     int chunkSize = array.length / numThreads;
     int beginIndex = 0, endIndex = chunkSize;
