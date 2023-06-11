@@ -2,6 +2,8 @@ package day03.ex02;
 
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Program {
 
@@ -18,14 +20,15 @@ public class Program {
     int numThreads = Integer.parseInt(args[1].substring("--threadsCount=".length()));
     Arrays.fill(array, 1);
     if (array.length > 2000000 || numThreads > array.length) {
-      System.out.println("Index out of range, try again with correct number\n");
+      System.out.println("Index out of range, try again with correct numbers\n");
+      System.exit(-1);
     }
-    Thread taskThread = new Thread(new TaskThread(array, numThreads));
-    taskThread.start();
-
-    taskThread.join();
-
-    System.out.println(array.length);
+    long totalFromThread = 0;
+    ExecutorService exec = Executors.newSingleThreadExecutor();
+    Runnable taskThread = new TaskThread(array, numThreads);
+    exec.execute(taskThread);
+    exec.shutdown();
+//    System.out.println(totalFromThread);
 
   }
   public static boolean check(String checkOne, String checkTwo) {
