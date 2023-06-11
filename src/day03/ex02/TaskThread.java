@@ -1,10 +1,13 @@
 package day03.ex02;
 
 
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public class TaskThread implements Runnable {
+public class TaskThread implements Callable<Integer> {
 
   private final int[] array;
   private final int numThreads;
@@ -14,30 +17,29 @@ public class TaskThread implements Runnable {
     this.numThreads = count;
   }
 
-  public synchronized void run() {
+  public Integer call() throws ExecutionException{
+    Integer totalSum = 0;
     int chunkSize = array.length / numThreads;
     int beginIndex = 0, endIndex = chunkSize;
     ExecutorService executor = Executors.newFixedThreadPool(numThreads);
-    for (int i = 1; i <= numThreads; i++) {
+    for (int i = 1; i <= numThreads; ++i) {
       if (i == numThreads)
         endIndex = array.length;
-//      int[] threadArray = new int[endIndex - beginIndex];
-//      System.arraycopy(array, beginIndex, threadArray, 0, endIndex - beginIndex);
       Task thread = new Task(array, beginIndex, endIndex, i);
-      executor.execute(thread);
+      totalSum += thread.call();
       beginIndex = endIndex;
       endIndex += chunkSize;
     }
     executor.shutdown();
+  return totalSum;
   }
 }
 
-class Task implements Runnable {
+class Task implements Callable<Integer>  {
 
   int[] array;
   int begin, end, tIndex;
-  public int sum = 0;
-  public int totalSum = 0;
+  public Integer sum = 0;
 
   public Task(int[] arr, int bg, int en, int tNumber) {
     array = arr;
@@ -47,11 +49,12 @@ class Task implements Runnable {
 
   }
 
-  public synchronized void run() {
+  public Integer call() {
     sum = 0;
     for (int i = begin; i < end; i++) {
       sum += array[i];
     }
     System.out.printf("Thread %d: from %d to %d sum is %d\n", tIndex, begin, end, sum);
+  return sum;
   }
 }
