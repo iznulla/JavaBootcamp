@@ -8,46 +8,53 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Program {
 
   public static void main(String[] args) {
 
-    List<Thread> threads = new ArrayList<>();
-
-    for (int i = 1; i <= 3; i++) {
-      DownloadThread dwn = new DownloadThread("./file_urls.txt", i);
-      threads.add(dwn);
-      dwn.start();
+    if (args.length < 1 || !args[0].startsWith("--threadsCount=")) {
+      System.out.println("Please make sure you write like in the example --threadsCount=3\n");
+      System.exit(-1);
     }
-    for (Thread thr : threads) {
-      try {
-        thr.join();
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
+    try {
+      int numThreads = Integer.parseInt(args[0].substring("--threadsCount=".length()));
+      UrlParser urlParser = new UrlParser("./file_urls.txt");
+      ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+      Vector<String> url = urlParser.getUrls();
+      for (int i = 0; i < url.size(); i++) {
+        DownloadThread dwn = new DownloadThread(url.elementAt(i), i);
+        executorService.execute(dwn);
       }
+      executorService.shutdown();
+    } catch (IllegalArgumentException e) {
+      System.err.println("Pleas put legal argument and try again\n");
+      System.exit(-1);
     }
+
+
   }
 }
 
-class DownloadThread extends Thread{
-  UrlParser urls;
-  String[] urlArray;
-  int index;
+class DownloadThread implements Runnable {
 
+  String urls;
+  Integer fileNumber;
 
-  public DownloadThread(String urlFilename, int urlIndex) {
-    urls = new UrlParser(urlFilename);
-    urlArray =  urls.getUrls();
-    index = urlIndex;
+  public DownloadThread(String url, Integer number) {
+    urls = url;
+    fileNumber = number;
   }
 
-  public void dwn(int index) {
+  public void dwn(String ur) {
     try {
-      URL url = new URL(urlArray[index]);
+      URL url = new URL(ur);
       BufferedInputStream bis = new BufferedInputStream(url.openStream());
-      String[] getFilename = urlArray[index].split("/");
-      String filename = getFilename[getFilename.length -1];
+      String[] getFilename = ur.split("/");
+      String filename = getFilename[getFilename.length - 1];
       FileOutputStream fis = new FileOutputStream(filename);
       byte[] buffer = new byte[1024];
       int count = 0;
@@ -56,37 +63,43 @@ class DownloadThread extends Thread{
       }
       fis.close();
       bis.close();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
-  public synchronized void run() {
-    for (int i = 0; i < this.urlArray.length; i++) {
-      dwn(index);
-      System.out.println(this.getName() + " start download file number " + index);
-    }
-  }
 
+  public synchronized void run() {
+
+      String[] threadId = Thread.currentThread().getName().split("-");
+      System.out.println("Thread-" + threadId[threadId.length -1]
+          + " start download file number " + (fileNumber + 1));
+      dwn(urls);
+      System.out.println("Thread-" + threadId[threadId.length -1]
+          + " finish download file number " + (fileNumber + 1));
+    }
 }
+
 class UrlParser {
-  private final List<String> urls;
+
+  private final Vector<String> urls;
 
   UrlParser(String filename) {
-    urls = new ArrayList<>();
+    urls = new Vector<>();
     readFile(filename);
   }
 
-  public String[] getUrls() {
-    return urls.toArray(new String[0]);
+  public Vector<String> getUrls() {
+    return urls;
   }
+
   private void readFile(String filename) {
     try {
       String url;
       FileReader fileReader = new FileReader(filename);
       BufferedReader buf = new BufferedReader(fileReader);
-      while ((url = buf.readLine()) != null)
+      while ((url = buf.readLine()) != null) {
         urls.add(url);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
