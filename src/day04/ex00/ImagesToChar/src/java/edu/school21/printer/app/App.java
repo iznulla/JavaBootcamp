@@ -1,12 +1,13 @@
-package edu.school21.printer.app;
-
+package day04.ex00.ImagesToChar.src.java.edu.school21.printer.app;
 import edu.school21.printer.logic.ImagePrinterInCommandLine;
+
+
 
 
 public class App {
     public static void main(String[] args) {
         if (checkArgs(args)) {
-            ImagePrinterInCommandLine image = new ImagePrinterInCommandLine();
+            edu.school21.printer.logic.ImagePrinterInCommandLine image = new ImagePrinterInCommandLine();
             image.printImg(args[0], args[1], args[2]);
         }
 
