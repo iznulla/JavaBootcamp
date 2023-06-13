@@ -1,6 +1,6 @@
-package day04.ex00.ImagesToChar.src.java.edu.school21.printer.app;
+package edu.school21.printer.app;
 
-import day04.ex00.ImagesToChar.src.java.edu.school21.printer.logic.ImagePrinterInCommandLine;
+import edu.school21.printer.logic.ImagePrinterInCommandLine;
 
 
 public class App {
