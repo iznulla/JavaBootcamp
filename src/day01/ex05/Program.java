@@ -72,7 +72,7 @@ public class Program {
       System.out.println("The transfer is complete");
     }
     catch (UserNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.out.println("Some wrong ");
     }
   }
 
@@ -91,7 +91,7 @@ public class Program {
       }
     }
     catch (UserNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.out.println("Input correct id");
     }
   }
 
@@ -112,7 +112,7 @@ public class Program {
     }
     catch (IllegalArgumentException | IllegalTransactionException |
            UserNotFoundException | TransactionNotFoundException e) {
-      System.out.println(e.getMessage());
+      System.out.println("User ID or transfer ID is not define ");
     }
   }
 

@@ -7,5 +7,28 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library name="jcdp">
+        <ANNOTATIONS>
+          <root url="jar://$MODULE_DIR$/src/day04/ex02/ImagesToChar/lib/jcdp.jar!/" />
+        </ANNOTATIONS>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/src/day04/ex02/ImagesToChar/lib/jcdp.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/src/day04/ex02/ImagesToChar/lib/jcdp.jar!/" />
+        </JAVADOC>
+        <NATIVE>
+          <root url="jar://$MODULE_DIR$/src/day04/ex02/ImagesToChar/lib/jcdp.jar!/" />
+        </NATIVE>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/src/day04/ex02/ImagesToChar/lib/jcdp.jar!/" />
+        </SOURCES>
+        <jarDirectory url="jar://$MODULE_DIR$/src/day04/ex02/ImagesToChar/lib/jcdp.jar!/" recursive="false" />
+        <jarDirectory url="jar://$MODULE_DIR$/src/day04/ex02/ImagesToChar/lib/jcdp.jar!/" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" name="JCDP-4.0.2" level="project" />
+    <orderEntry type="library" name="jcommander" level="project" />
   </component>
 </module>
