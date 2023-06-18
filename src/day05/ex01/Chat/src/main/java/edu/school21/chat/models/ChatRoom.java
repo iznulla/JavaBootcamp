@@ -1,5 +1,7 @@
-package edu.school21.chat;
+package edu.school21.chat.models;
 
+import edu.school21.chat.models.Message;
+import edu.school21.chat.models.User;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,10 +37,9 @@ public class ChatRoom {
 
   @Override
   public String toString() {
-    return "ChatRoom {" +
-        "ID = " + this.ID +
-        ", name = " + this.name +
-        ", owner = " + this.owner +
-        ", chatroom = " +this.chatroom;
+    return "id=" + this.ID +
+        ",name=" + this.name +
+        ",owner=" + this.owner.getLogin() +
+        ",chatroom=" +this.chatroom;
   }
 }

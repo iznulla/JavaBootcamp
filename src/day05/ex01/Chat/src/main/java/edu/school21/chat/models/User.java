@@ -1,22 +1,28 @@
-package edu.school21.chat;
+package edu.school21.chat.models;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
 
 public class User {
   private final long ID;
   private final String login;
   private final String password;
-  List<ChatRoom> createdRooms;
-  List<ChatRoom> userSocialized;
+  private final Arrays createdRooms;
+  private final Arrays userSocialized;
 
-  public User(long id, String login, String password, List<ChatRoom> createdRooms,
-  List<ChatRoom> userSocialized) {
+  public User(long id, String login, String password, Arrays createdRooms,
+  Arrays userSocialized) {
     this.ID = id;
     this.login = login;
     this.password = password;
     this.createdRooms = createdRooms;
     this.userSocialized = userSocialized;
+  }
+
+  public String getLogin() {
+    return login;
   }
 
   @Override
@@ -39,12 +45,10 @@ public class User {
 
   @Override
   public String toString() {
-    return "User {"
-        + "ID = " + this.ID
-        + ", Login = " + login +
-        ", Password = " + password +
-        ", CreatedRooms = " + createdRooms +
-        ", UserSocializes = " + userSocialized;
+    return "id=" + this.ID
+        + ",login=" + login + ",password=" + password +
+        ",createdRooms=" + createdRooms +
+        ",userSocializes=" + userSocialized;
   }
 
 }

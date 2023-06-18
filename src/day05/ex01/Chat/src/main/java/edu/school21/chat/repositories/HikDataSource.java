@@ -18,9 +18,9 @@ public class HikDataSource {
   }
   private HikDataSource() {}
 
-  public static Connection getConnection() throws SQLException {
-    return ds.getConnection();
-  }
+//  public static Connection getConnections() throws SQLException {
+//    return ds.getConnection();
+//  }
 
   public static HikariDataSource getHkDataSource() {
     return ds;

@@ -1,5 +1,6 @@
-package edu.school21.chat;
+package edu.school21.chat.models;
 
+import edu.school21.chat.models.ChatRoom;
 import java.util.Date;
 import java.util.Objects;
 
@@ -38,11 +39,11 @@ public class Message {
 
   @Override
   public String toString() {
-    return "Message{" +
-        "ID = " + this.ID +
-        ", author = " + author +
-        ", room = " + room +
-        ", text = " + text +
-        ", datetime = " + datetime;
+    return "Message : {\n" +
+        "id=" + this.ID +
+        ",\nauthor={" + author +
+        "},\nroom={" + room +
+        "},\ntext=" + text +
+        ",\ndatetime=" + datetime;
   }
 }
