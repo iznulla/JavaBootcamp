@@ -1,19 +1,21 @@
 package edu.school21.chat.models;
 
+import java.sql.Array;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 
 public class User {
+
   private final long ID;
   private final String login;
   private final String password;
-  private final Arrays createdRooms;
-  private final Arrays userSocialized;
+  private final Array createdRooms;
+  private final Array userSocialized;
 
-  public User(long id, String login, String password, Arrays createdRooms,
-  Arrays userSocialized) {
+  public User(long id, String login, String password, Array createdRooms,
+      Array userSocialized) {
     this.ID = id;
     this.login = login;
     this.password = password;
@@ -27,9 +29,12 @@ public class User {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || this.getClass() != o.getClass())
+    if (this == o) {
+      return true;
+    }
+    if (o == null || this.getClass() != o.getClass()) {
       return false;
+    }
     User user = (User) o;
     return user.ID == this.ID &&
         ((user.login != null && this.login.equals(user.login)) &&

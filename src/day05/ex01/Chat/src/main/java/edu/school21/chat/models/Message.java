@@ -44,6 +44,7 @@ public class Message {
         ",\nauthor={" + author +
         "},\nroom={" + room +
         "},\ntext=" + text +
-        ",\ndatetime=" + datetime;
+        ",\ndatetime=" + datetime
+        + "}";
   }
 }

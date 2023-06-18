@@ -1,21 +1,20 @@
 package edu.school21.chat.models;
 
-import edu.school21.chat.models.Message;
-import edu.school21.chat.models.User;
-import java.util.List;
+
+import java.sql.Array;
 import java.util.Objects;
 
 public class ChatRoom {
   private final long ID;
   private final String name;
   private final User owner;
-  List<Message> chatroom;
+  private final Array messages;
 
-  public ChatRoom(long id, String name, User owner, List<Message> chatroom ) {
+  public ChatRoom(long id, String name, User owner, Array messages ) {
     this.ID = id;
     this.name = name;
     this.owner = owner;
-    this.chatroom = chatroom;
+    this.messages = messages;
   }
 
   @Override
@@ -27,12 +26,12 @@ public class ChatRoom {
     return this.ID == room.ID &&
         (Objects.equals(this.name, room.name) &&
         Objects.equals(this.owner, room.owner) &&
-        Objects.equals(this.chatroom, room.chatroom));
+        Objects.equals(this.messages, room.messages));
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.ID, this.name, this.owner, this.chatroom);
+    return Objects.hash(this.ID, this.name, this.owner, this.messages);
   }
 
   @Override
@@ -40,6 +39,6 @@ public class ChatRoom {
     return "id=" + this.ID +
         ",name=" + this.name +
         ",owner=" + this.owner.getLogin() +
-        ",chatroom=" +this.chatroom;
+        ",messages=" +this.messages;
   }
 }
