@@ -11,13 +11,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
 public class MessagesRepositoryJdbcImpl implements MessagesRepository {
+
   Connection con;
+
   public MessagesRepositoryJdbcImpl(DataSource dataSource) throws SQLException {
     this.con = dataSource.getConnection();
   }
@@ -39,8 +42,6 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
       }
     } catch (SQLException e) {
       e.printStackTrace();
-    } finally {
-      con.close();
     }
     return Optional.empty();
   }
@@ -48,8 +49,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
   @Override
   public void save(Message message) throws SQLException {
     String sql = "INSERT INTO public.messages (author_id, room_id, text, date) VALUES (?, ?, ?, ?)";
-    if (message.getAuthor() == null || message.getRoom() == null)
-      throw new NotSavedSubEntityException("author or room is null");
+    checkParams(message);
     User user = findByUserId(message.getAuthor().getId()).orElse(null);
     ChatRoom chatRoom = findByChatId(message.getRoom().getId()).orElse(null);
     try (PreparedStatement statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -73,6 +73,32 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
       e.printStackTrace();
     } finally {
       con.close();
+    }
+  }
+
+  @Override
+  public void update(Message message) throws SQLException {
+    String sql = "UPDATE public.messages SET author_id=?, room_id=?, text=?, date=? WHERE id=?";
+    checkParams(message);
+
+    if (message.getText() == null)
+      message.setText("");
+
+    if (message.getDatetime() == null) {
+      message.setDatetime(Timestamp.valueOf(LocalDateTime.now()));
+    }
+    try (PreparedStatement statement = con.prepareStatement(sql)) {
+      statement.setLong(1, message.getAuthor().getId());
+      statement.setLong(2, message.getRoom().getId());
+      statement.setString(3, message.getText());
+      statement.setTimestamp(4, (Timestamp) message.getDatetime());
+      statement.setLong(5, message.getID());
+      int rowsUpdated = statement.executeUpdate();
+      if (rowsUpdated > 0) {
+        System.out.println("An existing message was updated successfully!");
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
@@ -112,5 +138,23 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
       e.printStackTrace();
     }
     return Optional.empty();
+  }
+
+  private void checkParams(Message message) throws SQLException {
+
+    if (message.getAuthor() == null) {
+      throw new NotSavedSubEntityException("Author is null");
+    }
+    if (message.getRoom() == null) {
+      throw new NotSavedSubEntityException("ChatRoom is null");
+    }
+
+    if (!findByUserId(message.getAuthor().getId()).isPresent()) {
+      throw new NotSavedSubEntityException("User not found");
+    }
+    if (!findByChatId(message.getRoom().getId()).isPresent()) {
+      throw new NotSavedSubEntityException("ChatRoom not found");
+    }
+
   }
 }

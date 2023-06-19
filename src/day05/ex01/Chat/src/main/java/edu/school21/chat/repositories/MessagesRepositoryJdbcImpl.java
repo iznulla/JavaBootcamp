@@ -26,7 +26,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
 
   @Override
   public Optional<Message> findById(Long id) throws SQLException {
-    String sql = "SELECT * FROM public.messages WHERE author_id = ?";
+    String sql = "SELECT * FROM public.messages WHERE id = ?";
     try {
       PreparedStatement statement = con.prepareStatement(sql);
       statement.setLong(1, id);

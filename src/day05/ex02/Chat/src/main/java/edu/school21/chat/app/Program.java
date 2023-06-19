@@ -26,6 +26,7 @@ public class Program {
         Timestamp.valueOf(LocalDateTime.now()));
     MessagesRepository msg = new MessagesRepositoryJdbcImpl(HikDataSource.getHkDataSource());
     msg.save(message);
+    System.out.println(message.getID());
 
   }
 }

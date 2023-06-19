@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="62166596-ef32-4f7f-b9ea-b81e5c5fdabe" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../ex01/Chat/src/main/java/edu/school21/chat/app/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ex01/Chat/src/main/java/edu/school21/chat/app/Program.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ex01/Chat/src/main/java/edu/school21/chat/repositories/MessagesRepositoryJdbcImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../ex01/Chat/src/main/java/edu/school21/chat/repositories/MessagesRepositoryJdbcImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ex01/Chat/target/classes/edu/school21/chat/app/Program.class" beforeDir="false" afterPath="$PROJECT_DIR$/../ex01/Chat/target/classes/edu/school21/chat/app/Program.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ex01/Chat/target/classes/edu/school21/chat/repositories/MessagesRepositoryJdbcImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/../ex01/Chat/target/classes/edu/school21/chat/repositories/MessagesRepositoryJdbcImpl.class" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeStyleSettingsInfer">
+    <option name="done" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectId" id="2RPBrcHQZBVYFEwvRbGg1WOTVTv" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/codela/Desktop/JavaButcamp/src/day05/ex02"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="62166596-ef32-4f7f-b9ea-b81e5c5fdabe" name="Changes" comment="" />
+      <created>1687142035954</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1687142035954</updated>
+    </task>
+    <servers />
+  </component>
+</project>
