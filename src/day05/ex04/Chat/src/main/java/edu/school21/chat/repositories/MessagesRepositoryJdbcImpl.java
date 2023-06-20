@@ -26,7 +26,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
   }
 
   @Override
-  public Optional<Message> findById(Long id) throws SQLException {
+  public Optional<Message> findById(Long id) {
     String sql = "SELECT * FROM public.messages WHERE id = ?";
     try (PreparedStatement statement = con.prepareStatement(sql)) {
       statement.setLong(1, id);
@@ -111,11 +111,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
       if (resultSet.next()) {
         String login = resultSet.getString(2);
         String passwd = resultSet.getString(3);
-        Array room = resultSet.getArray(4);
-        Array usrSoc = resultSet.getArray(5);
-        List<Object> crRooms = Collections.singletonList(room);
-        List<Object> userSoc = Collections.singletonList(usrSoc);
-        return Optional.of(new User(id, login, passwd, crRooms, userSoc));
+        return Optional.of(new User(id, login, passwd, null, null));
       }
     } catch (SQLException e) {
       e.printStackTrace();

@@ -1,8 +1,5 @@
 package edu.school21.chat.models;
 
-import java.sql.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -12,11 +9,11 @@ public class User {
   private final long ID;
   private final String login;
   private final String password;
-  private final List<Object> createdRooms;
-  private final List<Object> userSocialized;
+  private final List<ChatRoom> createdRooms;
+  private final List<ChatRoom> userSocialized;
 
-  public User(long id, String login, String password, List<Object> createdRooms,
-      List<Object> userSocialized) {
+  public User(long id, String login, String password, List<ChatRoom> createdRooms,
+      List<ChatRoom> userSocialized) {
     this.ID = id;
     this.login = login;
     this.password = password;
@@ -32,6 +29,12 @@ public class User {
   }
   public String getPassword() {
     return password;
+  }
+  public List<ChatRoom> crRoomsList() {
+    return createdRooms;
+  }
+  public List<ChatRoom> socializeeRooms() {
+    return userSocialized;
   }
 
   @Override

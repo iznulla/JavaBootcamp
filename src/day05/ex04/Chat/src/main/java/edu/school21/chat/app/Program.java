@@ -1,27 +1,19 @@
 package edu.school21.chat.app;
 
-import edu.school21.chat.models.Message;
+
+import edu.school21.chat.models.User;
 import edu.school21.chat.repositories.HikDataSource;
-import edu.school21.chat.repositories.MessagesRepository;
-import edu.school21.chat.repositories.MessagesRepositoryJdbcImpl;
+import edu.school21.chat.repositories.UserRepositories;
+import edu.school21.chat.repositories.UserRepositoriesJdbcImpl;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.util.List;
 
 public class Program {
 
   public static void main(String[] args) throws SQLException {
-    MessagesRepository msg = new MessagesRepositoryJdbcImpl(HikDataSource.getHkDataSource());
-    Optional<Message> messageOptional = msg.findById(7L);
-    if (messageOptional.isPresent()) {
-      System.out.println(messageOptional.orElse(null));
-      Message message = messageOptional.get();
-      message.setText("Bella Ciao");
-      message.setDatetime(null);
-      msg.update(message);
-    }
-    messageOptional = msg.findById(7L);
-    if (messageOptional.isPresent()) {
-      System.out.println(messageOptional.orElse(null));
-    }
+    UserRepositories usr = new UserRepositoriesJdbcImpl(HikDataSource.getHkDataSource());
+    List<User> users = usr.findAll(1, 10);
+    users.forEach(System.out::println);
+
   }
 }
