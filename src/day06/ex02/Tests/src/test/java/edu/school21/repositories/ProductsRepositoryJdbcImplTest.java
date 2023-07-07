@@ -10,6 +10,8 @@ import javax.sql.DataSource;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -27,6 +29,9 @@ public class ProductsRepositoryJdbcImplTest {
       new Product(6L, "iphone15ProMax", 1500),
       new Product(7L, "ilnaz", 2000)
   ));
+  final Product EXPECTED_FIND_BY_ID_PRODUCT = new Product(2L, "iphone14Pro", 1245.2);
+  final Product EXPECTED_UPDATE_PRODUCT = new Product(7L, "ILNAX", 666.66);
+  final Product EXPECTED_SAVE_PRODUCT = new Product(8L, "Inditex", 11111111111111.1);
   ProductRepositoryJdbcImpl products;
 
   @BeforeEach
@@ -49,4 +54,32 @@ public class ProductsRepositoryJdbcImplTest {
   void findAll() {
     assertEquals(EXPECTED_FIND_ALL_PRODUCTS, products.findAll());
   }
+
+  @ParameterizedTest
+  @ValueSource(longs = 2L)
+  void findById(Long id) {
+    assertEquals(EXPECTED_FIND_BY_ID_PRODUCT, products.findById(id).orElse(null));
+  }
+
+  @Test
+  void update() {
+    products.update(EXPECTED_UPDATE_PRODUCT);
+    assertEquals(EXPECTED_UPDATE_PRODUCT, products.findById(7L).orElse(null));
+  }
+
+  @Test
+  void save() {
+    products.save(EXPECTED_SAVE_PRODUCT);
+    assertEquals(EXPECTED_SAVE_PRODUCT, products.findById(8L).orElse(null));
+  }
+
+  @Test
+  void delete() {
+    products.save(EXPECTED_SAVE_PRODUCT);
+    assertEquals(EXPECTED_SAVE_PRODUCT, products.findById(8L).orElse(null));
+    assertNotEquals(EXPECTED_FIND_ALL_PRODUCTS, products.findAll());
+    products.delete(8L);
+    assertEquals(EXPECTED_FIND_ALL_PRODUCTS, products.findAll());
+  }
+
 }

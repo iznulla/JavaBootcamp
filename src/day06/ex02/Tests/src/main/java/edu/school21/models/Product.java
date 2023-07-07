@@ -36,4 +36,16 @@ public class Product {
         "\nprice=" + this.price;
   }
 
+  public Long getID() {
+    return ID;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public double getPrice() {
+    return price;
+  }
+
 }
