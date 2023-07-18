@@ -20,8 +20,8 @@ public class User {
         location = newLocation;
     }
 
-    public void birthday() {
-        age += 1;
+    public int birthday() {
+        return age += 1;
     }
 
     @Override

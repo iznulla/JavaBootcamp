@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class Program {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
 
         Set<Class> classes = PotroshitelClassa.findAllClassesUsingClassLoader("edu.school21.models");
         classes.stream().map(Class::getSimpleName).forEach(System.out::println);
@@ -32,6 +32,8 @@ public class Program {
         System.out.println(obj+"\n"+"-------------------------");
         PotroshitelClassa.changeFields(obj);
         System.out.println(obj);
+        System.out.println("-------------------------");
+        PotroshitelClassa.callMethod(obj);
 
 
 

@@ -10,8 +10,8 @@ public class Col {
         this.name = name;
     }
 
-    public String rr(String s, double d) {
-        return null;
+    public double rr(double a, double b) {
+        return a + b;
     }
 
     @Override

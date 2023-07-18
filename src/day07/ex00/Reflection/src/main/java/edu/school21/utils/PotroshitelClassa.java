@@ -4,8 +4,7 @@ package edu.school21.utils;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,17 +45,17 @@ public class PotroshitelClassa {
         return clazz;
     }
 
-    private static Object fieldTypeCast(String clazz, String str) {
-        Object obj = null;
+    private static Optional<Object> fieldTypeCast(String clazz, String str) {
+        Optional<Object> obj = Optional.empty();
         try {
             if (clazz.toLowerCase().startsWith("str"))
-                obj = str;
+                obj = Optional.of(str);
             else if (clazz.toLowerCase().startsWith("int"))
-                obj = Integer.parseInt(str);
+                obj = Optional.of(Integer.parseInt(str));
             else if (clazz.toLowerCase().startsWith("dou"))
-                obj = Double.parseDouble(str);
+                obj = Optional.of(Double.parseDouble(str));
             else if (clazz.toLowerCase().startsWith("bool"))
-                obj = Boolean.parseBoolean(str);
+                obj = Optional.of(Boolean.parseBoolean(str));
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
@@ -65,7 +64,7 @@ public class PotroshitelClassa {
 
 
     public static Object createObject(Class<?> clazz) {
-        Object obj = null;
+        Object obj = null, setFieldName = null;
         try {
             obj = clazz.getConstructor().newInstance();
             Field[] fields = obj.getClass().getDeclaredFields();
@@ -73,7 +72,10 @@ public class PotroshitelClassa {
                 System.out.println(field.getName());
                 String str = ConsoleUtils.readL();
                 field.setAccessible(true);
-                field.set(obj, fieldTypeCast(field.getType().getSimpleName(), str));
+                if (fieldTypeCast(field.getType().getSimpleName(), str).isPresent()) {
+                    setFieldName = fieldTypeCast(field.getType().getSimpleName(), str).get();
+                }
+                field.set(obj, setFieldName);
             }
             return obj;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
@@ -103,10 +105,29 @@ public class PotroshitelClassa {
             else
                 throw new ClassNotFoundExcept("Field " + value + "not found");
         } catch (ClassNotFoundExcept | NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            throw new ClassNotFoundExcept("Field not found");
         }
     }
 
-
+    public static void callMethod(Object clazz) throws InvocationTargetException, IllegalAccessException {
+        System.out.println("Enter name of the method for call");
+        String methodName = ConsoleUtils.readL();
+        Optional<Method> methods = Arrays.stream(clazz.getClass().getDeclaredMethods())
+                .filter(method -> method.getName()
+                .toLowerCase().equals(methodName)).findFirst();
+        if (methods.isPresent()) {
+            Parameter[] parameters = methods.get().getParameters();
+            Object[] args = new Object[parameters.length];
+            int i = 0;
+            for (Parameter parameter : parameters) {
+                System.out.printf("Enter %s value\n", parameter.getType().getSimpleName());
+                args[i] = fieldTypeCast(parameter.getType().getSimpleName(), ConsoleUtils.readL()).orElse("Bad argument");
+                i += 1;
+            }
+            if (!methods.get().getReturnType().getSimpleName().equals("void"))
+                System.out.println("Method returned\n"+methods.get().invoke(clazz, args));
+        } else
+            throw new ClassNotFoundExcept("Bad method");
+    }
 }
 
