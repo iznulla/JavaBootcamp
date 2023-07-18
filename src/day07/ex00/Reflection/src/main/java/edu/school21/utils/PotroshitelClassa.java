@@ -109,8 +109,8 @@ public class PotroshitelClassa {
         }
     }
 
-    public static void callMethod(Object clazz) throws InvocationTargetException, IllegalAccessException {
-        System.out.println("Enter name of the method for call");
+    public static void callMethod(Object clazz) {
+        System.out.println("Enter name of the method for call:");
         String methodName = ConsoleUtils.readL();
         Optional<Method> methods = Arrays.stream(clazz.getClass().getDeclaredMethods())
                 .filter(method -> method.getName()
@@ -120,12 +120,16 @@ public class PotroshitelClassa {
             Object[] args = new Object[parameters.length];
             int i = 0;
             for (Parameter parameter : parameters) {
-                System.out.printf("Enter %s value\n", parameter.getType().getSimpleName());
+                System.out.printf("Enter %s value:\n", parameter.getType().getSimpleName());
                 args[i] = fieldTypeCast(parameter.getType().getSimpleName(), ConsoleUtils.readL()).orElse("Bad argument");
                 i += 1;
             }
             if (!methods.get().getReturnType().getSimpleName().equals("void"))
-                System.out.println("Method returned\n"+methods.get().invoke(clazz, args));
+                try {
+                    System.out.println("Method returned:\n"+methods.get().invoke(clazz, args));
+                } catch (InvocationTargetException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
         } else
             throw new ClassNotFoundExcept("Bad method");
     }
