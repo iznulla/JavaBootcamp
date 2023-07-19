@@ -20,6 +20,12 @@ public class Car {
         crashesCount += n;
     }
 
+    public String changeMC(String model, String color) {
+        this.model = model;
+        this.color = color;
+        return this.toString();
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", Car.class.getSimpleName() + "[","]").

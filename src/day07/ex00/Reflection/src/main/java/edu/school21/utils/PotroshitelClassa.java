@@ -114,7 +114,7 @@ public class PotroshitelClassa {
         String methodName = ConsoleUtils.readL();
         Optional<Method> methods = Arrays.stream(clazz.getClass().getDeclaredMethods())
                 .filter(method -> method.getName()
-                .toLowerCase().equals(methodName)).findFirst();
+                .toLowerCase().equals(methodName.toLowerCase())).findFirst();
         if (methods.isPresent()) {
             Parameter[] parameters = methods.get().getParameters();
             Object[] args = new Object[parameters.length];
