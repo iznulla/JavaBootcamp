@@ -124,12 +124,13 @@ public class PotroshitelClassa {
                 args[i] = fieldTypeCast(parameter.getType().getSimpleName(), ConsoleUtils.readL()).orElse("Bad argument");
                 i += 1;
             }
-            if (!methods.get().getReturnType().getSimpleName().equals("void"))
+            if (!methods.get().getReturnType().getSimpleName().equals("void")) {
                 try {
-                    System.out.println("Method returned:\n"+methods.get().invoke(clazz, args));
+                    System.out.println("Method returned:\n" + methods.get().invoke(clazz, args));
                 } catch (InvocationTargetException | IllegalAccessException e) {
                     e.printStackTrace();
                 }
+            }
         } else
             throw new ClassNotFoundExcept("Bad method");
     }
