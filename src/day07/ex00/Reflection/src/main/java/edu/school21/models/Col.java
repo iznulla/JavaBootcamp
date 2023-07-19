@@ -10,7 +10,7 @@ public class Col {
         this.name = name;
     }
 
-    public double rr(double a, double b) {
+    public double plus(double a, double b) {
         return a + b;
     }
 
