@@ -38,7 +38,7 @@
 
         <executions>
           <execution>
-            <id>annotations</id>
+            <id>annotation</id>
             <phase>compile</phase>
             <goals>
               <goal>compile</goal>
