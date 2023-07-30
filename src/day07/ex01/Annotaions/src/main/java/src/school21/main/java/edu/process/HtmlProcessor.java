@@ -37,7 +37,7 @@ public class HtmlProcessor extends AbstractProcessor {
           StringBuilder inps = new StringBuilder();
           HtmlForm htmlForm = form.getAnnotation(HtmlForm.class);
           String filename = htmlForm.fileName();
-          String forms = String.format("<form action = \" %s\" method = \"%s\">", htmlForm.action(),
+          String forms = String.format("<form action = \"%s\" method = \"%s\">", htmlForm.action(),
               htmlForm.method());
           for (Element inp : form.getEnclosedElements()) {
             if (inp.getAnnotation(HtmlInput.class) != null) {
@@ -47,7 +47,8 @@ public class HtmlProcessor extends AbstractProcessor {
                   htmlInput.type(), htmlInput.name(), htmlInput.placeholder()));
             }
           }
-          String writeResult = forms + "\n" + inps;
+          String writeResult = forms + "\n" + inps + "\t<input type=\"submit\" value=\"Send\">\n"
+              + "</form>";
           try {
             Path outp = Paths.get("target/classes", filename);
             BufferedWriter bfw = Files.newBufferedWriter(outp);
