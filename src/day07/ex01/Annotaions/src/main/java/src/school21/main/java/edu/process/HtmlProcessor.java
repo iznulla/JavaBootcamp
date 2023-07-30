@@ -47,7 +47,7 @@ public class HtmlProcessor extends AbstractProcessor {
                   htmlInput.type(), htmlInput.name(), htmlInput.placeholder()));
             }
           }
-          String writeResult = forms + "\n" + inps + "\t<input type=\"submit\" value=\"Send\">\n"
+          String writeResult = forms + "\n" + inps + "\t<input type = \"submit\" value = \"Send\">\n"
               + "</form>";
           try {
             Path outp = Paths.get("target/classes", filename);
