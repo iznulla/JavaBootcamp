@@ -1,6 +1,5 @@
 package school21.edu.process;
 
-import com.google.auto.service.AutoService;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,7 +22,6 @@ import school21.edu.annotations.OrmEntity;
 
 @SupportedAnnotationTypes("school21.edu.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
-@AutoService(Processor.class)
 public class OrmProcessor  extends AbstractProcessor {
 
   @Override
@@ -52,7 +50,7 @@ public class OrmProcessor  extends AbstractProcessor {
           }
         }
       }
-      fileBuffer.append("\n);");
+      fileBuffer.append("\n);\n");
       createSchema(fileBuffer.toString());
     }
     return true;
