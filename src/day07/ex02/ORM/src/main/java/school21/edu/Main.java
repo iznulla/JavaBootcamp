@@ -9,6 +9,7 @@ public class Main {
   public static void main(String[] args) {
     User user = new User(1L, "Rinat", "Klinkov", 31);
     OrmManager ormManager = new OrmManagerImpl();
+    ormManager.save(user);
     System.out.println("Hello world!");
   }
 }

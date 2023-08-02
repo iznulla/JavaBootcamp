@@ -19,7 +19,7 @@ public class User {
 
   @OrmColumn(name = "first_name", length = 10)
   private String firstName;
-  @OrmColumn(name = "lastName", length = 10)
+  @OrmColumn(name = "first_name", length = 10)
   private String lastName;
   @OrmColumn(name = "age")
   private Integer age;

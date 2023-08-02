@@ -31,7 +31,9 @@ public class OrmProcessor  extends AbstractProcessor {
     for (Element entity : roundEnv.getElementsAnnotatedWith(OrmEntity.class)) {
       if (entity instanceof TypeElement) {
         OrmEntity ormEntity = entity.getAnnotation(OrmEntity.class);
-        fileBuffer.append(String.format(
+        fileBuffer.append(
+            String.format("drop table if exists %s;\n", ormEntity.table())
+        ).append(String.format(
             "create table if not exists %s (\n", ormEntity.table()));
         for (Element cols : entity.getEnclosedElements()) {
           if (cols.getAnnotation(OrmColumnId.class) != null) {
