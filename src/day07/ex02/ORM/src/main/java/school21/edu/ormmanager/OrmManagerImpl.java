@@ -13,11 +13,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
-import jdk.jfr.DataAmount;
 import school21.edu.JdbcManager.HikDataSource;
 import school21.edu.annotations.OrmColumnId;
 import school21.edu.annotations.OrmEntity;
-import school21.edu.models.User;
+
 
 public class OrmManagerImpl implements OrmManager {
 
@@ -37,11 +36,10 @@ public class OrmManagerImpl implements OrmManager {
         statement.setObject(i, fields[i].get(entity));
       }
       statement.executeUpdate();
-      System.out.println(getQueryDetails(entity));
+      System.out.println(getQueryDetails(entity) + "\nSuccess Save\n###############################");
     } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }
-
   }
 
 
@@ -57,27 +55,24 @@ public class OrmManagerImpl implements OrmManager {
           aClass.getAnnotation(OrmEntity.class).table());
       DataSource ds = HikDataSource.getDs();
       Connection con = ds.getConnection();
-      PreparedStatement statement = con.prepareStatement(query);
+      PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
       statement.setLong(1, id);
       ResultSet resultSet = statement.executeQuery();
       T obj = aClass.getConstructor().newInstance();
       Field[] fields = obj.getClass().getDeclaredFields();
       resultSet.next();
-      for (int i = 1; i < fields.length + 1; ++i) {
-        fields[i-1].setAccessible(true);
-//        fields[i-1].set(i, resultSet.getObject(i));
-//        statement.setObject(i, fields[i].get(entity));
-//        System.out.println(resultSet.getString(i).getTy);
-        System.out.println(fields[i-1].getType().getSimpleName());
+      for (int i = 1; i < fields.length; ++i) {
+        fields[i].setAccessible(true);
+        Object value = resultSet.getObject(i + 1);
+        fields[i].set(obj, value);
       }
-
-
+      System.out.println(query);
+      con.close();
       return obj;
-    } catch (SQLException e) {
+    } catch (SQLException | InstantiationException
+             | IllegalAccessException | NoSuchMethodException |
+        InvocationTargetException e) {
       e.printStackTrace();
-    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
-             InvocationTargetException e) {
-      throw new RuntimeException(e);
     }
     return null;
   }
@@ -91,6 +86,7 @@ public class OrmManagerImpl implements OrmManager {
       String schema = Files.lines(schemaUrl).collect(Collectors.joining("\n"));
       PreparedStatement preparedStatement = con.prepareStatement(schema);
       preparedStatement.execute();
+      con.close();
       System.out.println(schema);
     } catch (SQLException | IOException  e) {
       e.printStackTrace();

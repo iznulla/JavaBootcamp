@@ -6,10 +6,15 @@ import school21.edu.annotations.OrmEntity;
 
 @OrmEntity(table = "Comps")
 public class Computer {
+  public Computer() {}
+  public Computer(String brandName, Integer counts) {
+    this.brandName = brandName;
+    this.counts = counts;
+  }
   @OrmColumnId
   private Integer id;
   @OrmColumn(name = "Brand", length = 20)
-  private String BrandName;
+  private String brandName;
 
   @OrmColumn(name = "counts")
   private Integer counts;
@@ -19,7 +24,7 @@ public class Computer {
   }
 
   public String getBrandName() {
-    return BrandName;
+    return brandName;
   }
 
   public Integer getCounts() {
@@ -31,7 +36,7 @@ public class Computer {
   }
 
   public void setBrandName(String brandName) {
-    BrandName = brandName;
+    this.brandName = brandName;
   }
 
   public void setCounts(Integer counts) {
