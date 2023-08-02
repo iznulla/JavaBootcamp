@@ -12,9 +12,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Queue;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import school21.edu.JdbcManager.HikDataSource;
+import school21.edu.JdbcManager.JdbcUtils;
 import school21.edu.annotations.OrmColumnId;
 import school21.edu.annotations.OrmEntity;
 
@@ -55,38 +57,29 @@ public class OrmManagerImpl implements OrmManager {
   @Override
   public void update(Object entity) {
     try {
-      Class<?> clazz = entity.getClass();
       String query = getQueryDetails(entity, "update");
-      DataSource dataSource = HikDataSource.getDs();
-      Connection con = dataSource.getConnection();
-      PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-
-      Method[] methods = entity.getClass().getDeclaredMethods();
-      for (int i = 0; i < methods.length; ++i) {
-        if (methods[i].getName().equals("getId")) {
-          String ss = (String) methods[i].invoke(entity);
-          System.out.println(ss);
-        }
+      PreparedStatement statement = JdbcUtils.preStatement(query);
+      Field[] fields = entity.getClass().getDeclaredFields();
+      fields[0].setAccessible(true);
+      statement.setLong(fields.length, Long.parseLong(String.valueOf(fields[0].get(entity))));
+      for (int i = 1; i < fields.length; ++i) {
+        fields[i].setAccessible(true);
+        statement.setObject(i, fields[i].get(entity));
       }
-
-
+      statement.executeUpdate();
+      statement.close();
     } catch (SQLException e) {
       e.printStackTrace();
-    } catch (IllegalAccessException | InvocationTargetException e) {
+    } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     }
-
-
   }
-//  "UPDATE public.messages SET author_id=?, room_id=?, text=?, date=? WHERE id=?";
   @Override
   public <T> T fidById(Long id, Class<T> aClass) {
     try {
       String query = String.format("SELECT * FROM %s WHERE id=?",
           aClass.getAnnotation(OrmEntity.class).table());
-      DataSource ds = HikDataSource.getDs();
-      Connection con = ds.getConnection();
-      PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+      PreparedStatement statement = JdbcUtils.preStatement(query);
       statement.setLong(1, id);
       ResultSet resultSet = statement.executeQuery();
       T obj = aClass.getConstructor().newInstance();
@@ -100,7 +93,7 @@ public class OrmManagerImpl implements OrmManager {
         fields[i].set(obj, value);
       }
       System.out.println(query);
-      con.close();
+      statement.close();
       return obj;
     } catch (SQLException | InstantiationException
              | IllegalAccessException | NoSuchMethodException |
@@ -112,14 +105,12 @@ public class OrmManagerImpl implements OrmManager {
 
   public void init() {
     try {
-      DataSource dataSource = HikDataSource.getDs();
-      Connection con = dataSource.getConnection();
       Path schemaUrl = Paths.get("/Users/merylpor/Desktop/JavaButcamp/"
           + "src/day07/ex02/ORM/target/classes/schema.sql").normalize();
       String schema = Files.lines(schemaUrl).collect(Collectors.joining("\n"));
-      PreparedStatement preparedStatement = con.prepareStatement(schema);
-      preparedStatement.execute();
-      con.close();
+      PreparedStatement statement = JdbcUtils.preStatement(schema);
+      statement.execute();
+      statement.close();
       System.out.println(schema);
     } catch (SQLException | IOException  e) {
       e.printStackTrace();
@@ -129,9 +120,8 @@ public class OrmManagerImpl implements OrmManager {
   private String getQueryDetails(Object obj, String status) {
     StringBuilder query = new StringBuilder();
     StringBuilder values = new StringBuilder();
-    Class<?> clazz = obj.getClass();
-    Field[] fields = clazz.getDeclaredFields();
-    OrmEntity ormEntity = clazz.getAnnotation(OrmEntity.class);
+    Field[] fields = obj.getClass().getDeclaredFields();
+    OrmEntity ormEntity = obj.getClass().getAnnotation(OrmEntity.class);
     if (status.equals("save")) {
       query.append(String.format("INSERT INTO %s "
           + "(", ormEntity.table()));
@@ -147,8 +137,8 @@ public class OrmManagerImpl implements OrmManager {
     }
     else {
       query.append(String.format("UPDATE %s SET  ", ormEntity.table()));
-      if (clazz.getAnnotation(OrmColumnId.class) != null) {
-        OrmColumnId ormColumnId = clazz.getAnnotation(OrmColumnId.class);
+      if (obj.getClass().getAnnotation(OrmColumnId.class) != null) {
+        OrmColumnId ormColumnId = obj.getClass().getAnnotation(OrmColumnId.class);
         query.append(ormColumnId.id());
       }
       for (int i = 1; i < fields.length; ++i) {

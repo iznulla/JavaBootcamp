@@ -9,17 +9,17 @@ public class Main {
 
   public static void main(String[] args) {
     User user = new User( "Rinat", "Klinkov", 31);
-//    User user1 = new User( "Rinat", "Klinkov", 32);
     Computer computer = new Computer("Apple", 3);
     OrmManager ormManager = new OrmManagerImpl();
     ormManager.save(user);
     ormManager.save(computer);
     User us = ormManager.fidById(1L, User.class);
-    us.setAge(32);
-
+    us.setAge(null);
+    ormManager.update(us);
+    us.setAge(33);
     Computer co = ormManager.fidById(1L, Computer.class);
     System.out.println(us.getId());
-//    ormManager.update(user);
-//    System.out.println(co.getBrandName());
+    ormManager.update(us);
+    System.out.println(co.getBrandName());
   }
 }
