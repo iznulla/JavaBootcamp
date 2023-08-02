@@ -12,14 +12,14 @@ public class Computer {
     this.counts = counts;
   }
   @OrmColumnId
-  private Integer id;
+  private Long id;
   @OrmColumn(name = "Brand", length = 20)
   private String brandName;
 
   @OrmColumn(name = "counts")
   private Integer counts;
 
-  public Integer getId() {
+  public Long getId() {
     return id;
   }
 
@@ -31,7 +31,7 @@ public class Computer {
     return counts;
   }
 
-  public void setId(Integer id) {
+  public void setId(Long id) {
     this.id = id;
   }
 
