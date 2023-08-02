@@ -7,8 +7,8 @@ import school21.edu.annotations.OrmEntity;
 
 @OrmEntity(table = "simple_user")
 public class User {
-  public User(Long id, String firstName, String lastName, Integer age) {
-    this.id = id;
+  public User() {}
+  public User(String firstName, String lastName, Integer age) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.age = age;

@@ -1,11 +1,8 @@
 package school21.edu.ormmanager;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,10 +10,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.sql.Statement;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
-import jdk.jfr.internal.Options;
+import jdk.jfr.DataAmount;
 import school21.edu.JdbcManager.HikDataSource;
 import school21.edu.annotations.OrmColumnId;
 import school21.edu.annotations.OrmEntity;
@@ -31,46 +28,22 @@ public class OrmManagerImpl implements OrmManager {
   public void save(Object entity) {
     try {
       String query = getQueryDetails(entity);
-
       DataSource dataSource = HikDataSource.getDs();
       Connection con = dataSource.getConnection();
-      PreparedStatement statement = con.prepareStatement(query);
+      PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
       Field[] fields = entity.getClass().getDeclaredFields();
-      int i = 0;
-      for (Field field : fields) {
-        statement.setObject(i, field);
+      for (int i = 1; i < fields.length; ++i) {
+        fields[i].setAccessible(true);
+        statement.setObject(i, fields[i].get(entity));
       }
       statement.executeUpdate();
       System.out.println(getQueryDetails(entity));
-    } catch (SQLException e) {
+    } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }
 
   }
-  private String getQueryDetails(Object obj) {
-    StringBuilder query = new StringBuilder();
-    StringBuilder values = new StringBuilder();
-    Class<?> clazz = obj.getClass();
-    Field[] fields = clazz.getDeclaredFields();
-    OrmEntity ormEntity = clazz.getAnnotation(OrmEntity.class);
-    query.append(String.format("INSERT INTO %s "
-        + "(", ormEntity.table()));
-    if (clazz.getAnnotation(OrmColumnId.class) != null) {
-      OrmColumnId ormColumnId = clazz.getAnnotation(OrmColumnId.class);
-      query.append(ormColumnId.id());
-    }
-    for (Field field : fields) {
-      if (field.getName().equals("id")) {
-        query.append(String.format("%s", field.getName()));
-      }
-      else {
-        query.append(String.format(",%s", field.getName()));
-        values.append(",?");
-      }
-    }
-    query.append(") VALUES (?").append(values).append(");");
-  return query.toString();
-  }
+
 
   @Override
   public void update(Object entity) {
@@ -79,6 +52,33 @@ public class OrmManagerImpl implements OrmManager {
 
   @Override
   public <T> T fidById(Long id, Class<T> aClass) {
+    try {
+      String query = String.format("SELECT * FROM %s WHERE id=?",
+          aClass.getAnnotation(OrmEntity.class).table());
+      DataSource ds = HikDataSource.getDs();
+      Connection con = ds.getConnection();
+      PreparedStatement statement = con.prepareStatement(query);
+      statement.setLong(1, id);
+      ResultSet resultSet = statement.executeQuery();
+      T obj = aClass.getConstructor().newInstance();
+      Field[] fields = obj.getClass().getDeclaredFields();
+      resultSet.next();
+      for (int i = 1; i < fields.length + 1; ++i) {
+        fields[i-1].setAccessible(true);
+//        fields[i-1].set(i, resultSet.getObject(i));
+//        statement.setObject(i, fields[i].get(entity));
+//        System.out.println(resultSet.getString(i).getTy);
+        System.out.println(fields[i-1].getType().getSimpleName());
+      }
+
+
+      return obj;
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+             InvocationTargetException e) {
+      throw new RuntimeException(e);
+    }
     return null;
   }
 
@@ -95,6 +95,29 @@ public class OrmManagerImpl implements OrmManager {
     } catch (SQLException | IOException  e) {
       e.printStackTrace();
     }
+  }
 
+  private String getQueryDetails(Object obj) {
+    StringBuilder query = new StringBuilder();
+    StringBuilder values = new StringBuilder();
+    Class<?> clazz = obj.getClass();
+    Field[] fields = clazz.getDeclaredFields();
+    OrmEntity ormEntity = clazz.getAnnotation(OrmEntity.class);
+    query.append(String.format("INSERT INTO %s "
+        + "(", ormEntity.table()));
+    if (clazz.getAnnotation(OrmColumnId.class) != null) {
+      OrmColumnId ormColumnId = clazz.getAnnotation(OrmColumnId.class);
+      query.append(ormColumnId.id());
+    }
+    for (int i = 1; i < fields.length;++i) {
+      query.append(String.format("%s", fields[i].getName()));
+      values.append("?");
+      if (i != fields.length -1) {
+        query.append(",");
+        values.append(",");
+      }
+    }
+    query.append(") VALUES (").append(values).append(");");
+    return query.toString();
   }
 }
