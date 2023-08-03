@@ -24,7 +24,6 @@ public class OrmManagerImpl implements OrmManager {
   public void save(Object entity) {
     try {
       String query = getQueryDetails(entity, "save");
-      OrmEntity ormEntity = entity.getClass().getAnnotation(OrmEntity.class);
       PreparedStatement statement = JdbcUtils.preStatement(query);
       Field[] fields = entity.getClass().getDeclaredFields();
       for (int i = 1; i < fields.length; ++i) {
@@ -32,14 +31,7 @@ public class OrmManagerImpl implements OrmManager {
         statement.setObject(i, fields[i].get(entity));
       }
       statement.executeUpdate();
-      statement = JdbcUtils.preStatement(String.format("select id from %s "
-          + "group by id"
-          + " having max(id) > 0;", ormEntity.table()));
-      ResultSet resultSet = statement.executeQuery();
-      resultSet.next();
-      Long id = resultSet.getLong("id");
-      fields[0].setAccessible(true);
-      fields[0].set(entity, Long.parseLong(String.valueOf(id)));
+      fields[0].set(entity, getIncrementId(entity, fields[0]));
       statement.close();
       System.out.println(getQueryDetails(entity, "save"));
     } catch (SQLException | IllegalAccessException e) {
@@ -62,6 +54,7 @@ public class OrmManagerImpl implements OrmManager {
       }
       statement.executeUpdate();
       statement.close();
+      System.out.println(query);
     } catch (SQLException e) {
       e.printStackTrace();
     } catch (IllegalAccessException e) {
@@ -99,16 +92,28 @@ public class OrmManagerImpl implements OrmManager {
 
   public void init() {
     try {
-      Path schemaUrl = Paths.get("/Users/merylpor/Desktop/JavaButcamp/"
-          + "src/day07/ex02/ORM/target/classes/schema.sql").normalize();
+      Path schemaUrl = Paths.get("target/classes/schema.sql").normalize();
+      if (!Files.exists(schemaUrl)) {
+        throw new RuntimeException("File schema.sql not found. Compile the project using "
+            + "'mvn clean compile' to generate the file.");
+      }
       String schema = Files.lines(schemaUrl).collect(Collectors.joining("\n"));
       PreparedStatement statement = JdbcUtils.preStatement(schema);
       statement.execute();
       statement.close();
       System.out.println(schema);
-    } catch (SQLException | IOException  e) {
+    } catch (SQLException | IOException e) {
       e.printStackTrace();
     }
+  }
+
+  private Long getIncrementId(Object obj, Field field) throws SQLException {
+    OrmEntity ormEntity = obj.getClass().getAnnotation(OrmEntity.class);
+    PreparedStatement statement = JdbcUtils.preStatement(String.format("select max(id) from %s ", ormEntity.table()));
+    ResultSet resultSet = statement.executeQuery();
+    resultSet.next();
+    field.setAccessible(true);
+    return resultSet.getLong(1);
   }
 
   private String getQueryDetails(Object obj, String status) {
