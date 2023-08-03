@@ -55,4 +55,11 @@ public class User {
   public void setAge(Integer age) {
     this.age = age;
   }
+  @Override
+  public String toString() {
+    return String.format("User {id=%s,"
+        + "firstName=%s,"
+        + "lastName=%s,"
+        + "age=%s}  ", this.id, this.firstName, this.lastName, this.age);
+  }
 }

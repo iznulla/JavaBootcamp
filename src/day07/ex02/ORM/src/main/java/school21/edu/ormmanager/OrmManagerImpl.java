@@ -3,19 +3,13 @@ package school21.edu.ormmanager;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Queue;
 import java.util.stream.Collectors;
-import javax.sql.DataSource;
-import school21.edu.JdbcManager.HikDataSource;
 import school21.edu.JdbcManager.JdbcUtils;
 import school21.edu.annotations.OrmColumnId;
 import school21.edu.annotations.OrmEntity;
@@ -30,24 +24,24 @@ public class OrmManagerImpl implements OrmManager {
   public void save(Object entity) {
     try {
       String query = getQueryDetails(entity, "save");
-      DataSource dataSource = HikDataSource.getDs();
-      Connection con = dataSource.getConnection();
       OrmEntity ormEntity = entity.getClass().getAnnotation(OrmEntity.class);
-      PreparedStatement statement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+      PreparedStatement statement = JdbcUtils.preStatement(query);
       Field[] fields = entity.getClass().getDeclaredFields();
       for (int i = 1; i < fields.length; ++i) {
         fields[i].setAccessible(true);
         statement.setObject(i, fields[i].get(entity));
       }
       statement.executeUpdate();
-      statement = con.prepareStatement(String.format("select id from %s", ormEntity.table()));
+      statement = JdbcUtils.preStatement(String.format("select id from %s "
+          + "group by id"
+          + " having max(id) > 0;", ormEntity.table()));
       ResultSet resultSet = statement.executeQuery();
       resultSet.next();
       Long id = resultSet.getLong("id");
       fields[0].setAccessible(true);
       fields[0].set(entity, Long.parseLong(String.valueOf(id)));
-      con.close();
-      System.out.println(getQueryDetails(entity, "save") + "\nSuccess Save\n###############################");
+      statement.close();
+      System.out.println(getQueryDetails(entity, "save"));
     } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }

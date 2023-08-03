@@ -42,4 +42,12 @@ public class Computer {
   public void setCounts(Integer counts) {
     this.counts = counts;
   }
+
+  @Override
+  public String toString() {
+    return String.format("Computer {"
+        + "id=%s,"
+        + "brand=%s,"
+        + "count=%s}", this.id, this.brandName, this.counts);
+  }
 }
