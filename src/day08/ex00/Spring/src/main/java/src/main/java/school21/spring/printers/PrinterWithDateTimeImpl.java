@@ -4,13 +4,13 @@ import com.sun.istack.internal.NotNull;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import lombok.Data;
-import src.main.java.school21.spring.renders.Render;
+import src.main.java.school21.spring.renders.Renderer;
 
 @Data
 public class PrinterWithDateTimeImpl implements Printer {
 
   @NotNull
-  private final Render render;
+  private final Renderer render;
   private LocalDateTime localDateTime = LocalDateTime.now();
 
   @Override

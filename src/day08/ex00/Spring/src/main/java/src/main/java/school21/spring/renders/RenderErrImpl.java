@@ -5,7 +5,7 @@ import lombok.NonNull;
 import src.main.java.school21.spring.preprocessors.PreProcessor;
 
 @Data
-public class RenderErrImpl implements Render{
+public class RenderErrImpl implements Renderer {
 
   @NonNull
   private final PreProcessor preProcessor;

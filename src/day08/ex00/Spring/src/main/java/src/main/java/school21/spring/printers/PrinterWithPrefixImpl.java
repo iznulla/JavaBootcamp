@@ -3,13 +3,13 @@ package src.main.java.school21.spring.printers;
 import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import src.main.java.school21.spring.renders.Render;
+import src.main.java.school21.spring.renders.Renderer;
 
 @Data
 public class PrinterWithPrefixImpl implements Printer {
 
   @NotNull
-  private final Render render;
+  private final Renderer render;
 
   private String prefix;
 
