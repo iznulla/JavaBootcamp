@@ -1,15 +1,14 @@
 package src.main.java.school21.spring.renders;
 
+import lombok.Data;
+import lombok.NonNull;
 import src.main.java.school21.spring.preprocessors.PreProcessor;
 
+@Data
 public class RenderErrImpl implements Render{
 
+  @NonNull
   private final PreProcessor preProcessor;
-
-  public RenderErrImpl(PreProcessor preProcessor) {
-    this.preProcessor = preProcessor;
-  }
-
 
   @Override
   public void rendering(String message) {
