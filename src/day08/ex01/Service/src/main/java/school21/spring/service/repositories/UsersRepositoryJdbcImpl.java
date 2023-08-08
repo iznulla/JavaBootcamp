@@ -38,13 +38,11 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
       ps.setLong(1, id);
       ResultSet resultSet = ps.executeQuery();
       Field[] fields = user.getClass().getDeclaredFields();
-      System.out.println(fields.length);
-      long uId;
       resultSet.next();
-      uId = resultSet.getLong("id");
+      long uId = resultSet.getLong("id");
       for (int i = 1; i < fields.length; i++) {
         fields[i].setAccessible(true);
-        fields[i].set(user, resultSet.getObject(i+1).toString());
+        fields[i].set(user, resultSet.getObject(i + 1).toString());
       }
       user.setIdentifier(uId);
       return user;
@@ -57,10 +55,10 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
   @Override
   public List<User> findAll() {
     User user = new User();
-    List<User> list = new ArrayList<>();
     OrmEntity ormEntity = user.getClass().getAnnotation(OrmEntity.class);
+    List<User> list = new ArrayList<>();
     String query = String.format("SELECT * FROM %s;", ormEntity.table());
-    try(PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
+    try (PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
       ResultSet resultSet = ps.executeQuery();
       Field[] fields = user.getClass().getDeclaredFields();
       while (resultSet.next()) {
@@ -81,10 +79,9 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
   @Override
   public void save(User entity) {
-    try {
-      String query = getQueryDetails(entity, "save");
-      PreparedStatement ps = dataSource.getConnection()
-          .prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+    String query = getQueryDetails(entity, "save");
+    try (PreparedStatement ps = dataSource.getConnection()
+        .prepareStatement(query, Statement.RETURN_GENERATED_KEYS)){
       Field[] fields = entity.getClass().getDeclaredFields();
       for (int i = 1; i < fields.length; i++) {
         fields[i].setAccessible(true);
@@ -104,18 +101,17 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
   @Override
   public void update(User entity) {
     String query = getQueryDetails(entity, "update");
-    try {
-      PreparedStatement ps = dataSource.getConnection().prepareStatement(query);
+    try (PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
       Field[] fields = entity.getClass().getDeclaredFields();
       fields[0].setAccessible(true);
       ps.setObject(fields.length, fields[0].get(entity));
-      System.out.println(fields[0].get(entity));
       for (int i = 1; i < fields.length; i++) {
         fields[i].setAccessible(true);
         ps.setObject(i, fields[i].get(entity));
       }
-      if (ps.executeUpdate() == 0)
+      if (ps.executeUpdate() == 0) {
         throw new RuntimeException("Object is not added");
+      }
     } catch (SQLException | IllegalAccessException e) {
       throw new RuntimeException(e);
     }
@@ -127,8 +123,9 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     String query = "DELETE FROM users WHERE id=?;";
     try (PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
       ps.setLong(1, id);
-      if (ps.executeUpdate() == 0)
-        throw new RuntimeException("Object is not added");
+      if (ps.executeUpdate() == 0) {
+        throw new RuntimeException("Object is not deleted");
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -136,8 +133,28 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
   @Override
   public Optional<User> findByEmail(String email) {
+    User user = new User();
+    OrmEntity ormEntity = user.getClass().getAnnotation(OrmEntity.class);
+    String query = String.format("SELECT * FROM %s WHERE email=?;", ormEntity.table());
+    try (PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
+      ps.setString(1, email);
+      Field[] fields = user.getClass().getDeclaredFields();
+      ResultSet resultSet = ps.executeQuery();
+      if (resultSet.next()) {
+        long uId = resultSet.getLong("id");
+        for (int i = 1; i < fields.length; i++) {
+          fields[i].setAccessible(true);
+          fields[i].set(user, resultSet.getObject(i + 1).toString());
+        }
+        user.setIdentifier(uId);
+        return Optional.of(user);
+      }
+    } catch (SQLException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
     return Optional.empty();
   }
+
 
   public void createSchema() {
     try {
@@ -156,12 +173,12 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     }
   }
 
-  private String getQueryDetails(Object obj, String status) {
+  private String getQueryDetails(Object obj, String method) {
     StringBuilder query = new StringBuilder();
     StringBuilder values = new StringBuilder();
     Field[] fields = obj.getClass().getDeclaredFields();
     OrmEntity ormEntity = obj.getClass().getAnnotation(OrmEntity.class);
-    if (status.equals("save")) {
+    if (method.equals("save")) {
       query.append(String.format("INSERT INTO %s "
           + "(", ormEntity.table()));
       for (int i = 1; i < fields.length; ++i) {
@@ -173,8 +190,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
         }
       }
       query.append(") VALUES (").append(values).append(");");
-    }
-    else if (status.equals("update")) {
+    } else if (method.equals("update")) {
       query.append(String.format("UPDATE %s SET  ", ormEntity.table()));
       if (obj.getClass().getAnnotation(OrmColumnId.class) != null) {
         OrmColumnId ormColumnId = obj.getClass().getAnnotation(OrmColumnId.class);

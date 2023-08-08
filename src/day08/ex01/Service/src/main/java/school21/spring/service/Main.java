@@ -23,6 +23,8 @@ public class Main {
 //    usersRepository.update(user);
 //    usersRepository.delete(2L);
     List<User> list = usersRepository.findAll();
-    list.forEach(System.out::println);
+    User uu = usersRepository.findByEmail("Inzn").orElse(null);
+    System.out.println(uu);
+//    list.forEach(System.out::println);
   }
 }
