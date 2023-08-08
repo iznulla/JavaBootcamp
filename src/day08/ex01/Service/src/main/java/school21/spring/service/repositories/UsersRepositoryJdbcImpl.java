@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TransferQueue;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
@@ -32,23 +33,28 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
   @Override
   public User findById(Long id) {
-    String query = "SELECT * FROM users WHERE id=?;";
+    User user = new User("n");
+    OrmEntity ormEntity = user.getClass().getAnnotation(OrmEntity.class);
+    String query = String.format("SELECT * FROM %s WHERE id=?;", ormEntity.table());
     try (PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
       ps.setLong(1, id);
-      ResultSet resultSet = ps.getGeneratedKeys();
-      Class<?> clazz = User.class;
-      Field[] fields = clazz.getDeclaredFields();
+      ResultSet resultSet = ps.executeQuery();
+
+      Field[] fields = user.getClass().getDeclaredFields();
+      System.out.println(fields.length);
       long uId;
-      List<String> fl = new ArrayList<>();
       resultSet.next();
-      System.out.println(resultSet.getLong(1));
+      uId = resultSet.getLong("id");
       for (int i = 1; i < fields.length; i++) {
         fields[i].setAccessible(true);
-        System.out.println(resultSet.getObject(i, clazz));
+        fields[i].set(user, resultSet.getObject(i+1).toString());
       }
-//      System.out.println(uId);
+      user.setIdentifier(uId);
+      return user;
     } catch (SQLException e) {
       e.fillInStackTrace();
+    } catch (IllegalAccessException e) {
+      throw new RuntimeException(e);
     }
     return null;
   }

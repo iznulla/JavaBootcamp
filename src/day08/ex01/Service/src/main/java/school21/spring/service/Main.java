@@ -21,7 +21,7 @@ public class Main {
     user.setEmail("Laho");
 //    usersRepository.update(user);
 //    usersRepository.delete(2L);
-    usersRepository.findById(5L);
-    System.out.println(user);
+    User rrr = usersRepository.findById(96L);
+    System.out.println(rrr);
   }
 }
