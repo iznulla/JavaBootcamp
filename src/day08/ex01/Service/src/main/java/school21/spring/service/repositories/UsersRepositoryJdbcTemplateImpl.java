@@ -3,17 +3,19 @@ package school21.spring.service.repositories;
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
+import lombok.Data;
+import lombok.NonNull;
 import school21.spring.service.models.User;
 
-
+@Data
 public class UsersRepositoryJdbcTemplateImpl implements UsersRepository{
 
 
-  private final DataSource dataSource;
+  @NonNull private final DataSource dataSource;
 
-  public UsersRepositoryJdbcTemplateImpl(DataSource dataSource) {
-    this.dataSource = dataSource;
-  }
+//  public UsersRepositoryJdbcTemplateImpl(DataSource dataSource) {
+//    this.dataSource = dataSource;
+//  }
 
   @Override
   public User findById(Long id) {

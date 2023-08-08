@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -45,22 +44,18 @@ public class OrmProcessor  extends AbstractProcessor {
           if (cols.getAnnotation(OrmColumn.class) != null) {
             OrmColumn ormColumn = cols.getAnnotation(OrmColumn.class);
             fileBuffer.append(",\n\t")
-                .append(getFieldName(elements, cols))
+                .append(ormColumn.name())
                 .append(" ")
                 .append(typeToSqlType(getFieldType(elements, cols), ormColumn.length()));
           }
         }
       }
-
       fileBuffer.append("\n);\n");
       createSchema(fileBuffer.toString());
     }
     return true;
   }
 
-  private String getFieldName(Elements elements, Element element) {
-    return elements.getName(element.toString()).toString();
-  }
   private String getFieldType(Elements elements, Element element) {
     return elements.getTypeElement(element.asType().toString()).getSimpleName().toString();
   }
