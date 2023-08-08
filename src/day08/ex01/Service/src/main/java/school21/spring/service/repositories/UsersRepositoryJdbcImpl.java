@@ -12,8 +12,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TransferQueue;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import lombok.Data;
@@ -33,13 +31,12 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
   @Override
   public User findById(Long id) {
-    User user = new User("n");
+    User user = new User();
     OrmEntity ormEntity = user.getClass().getAnnotation(OrmEntity.class);
     String query = String.format("SELECT * FROM %s WHERE id=?;", ormEntity.table());
     try (PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
       ps.setLong(1, id);
       ResultSet resultSet = ps.executeQuery();
-
       Field[] fields = user.getClass().getDeclaredFields();
       System.out.println(fields.length);
       long uId;
@@ -51,17 +48,35 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
       }
       user.setIdentifier(uId);
       return user;
-    } catch (SQLException e) {
-      e.fillInStackTrace();
-    } catch (IllegalAccessException e) {
-      throw new RuntimeException(e);
+    } catch (SQLException | IllegalAccessException e) {
+      e.printStackTrace();
     }
     return null;
   }
 
   @Override
   public List<User> findAll() {
-    return null;
+    User user = new User();
+    List<User> list = new ArrayList<>();
+    OrmEntity ormEntity = user.getClass().getAnnotation(OrmEntity.class);
+    String query = String.format("SELECT * FROM %s;", ormEntity.table());
+    try(PreparedStatement ps = dataSource.getConnection().prepareStatement(query)) {
+      ResultSet resultSet = ps.executeQuery();
+      Field[] fields = user.getClass().getDeclaredFields();
+      while (resultSet.next()) {
+        User nUser = new User();
+        for (int i = 1; i < fields.length; i++) {
+          fields[0].setAccessible(true);
+          fields[0].set(nUser, resultSet.getLong(1));
+          fields[i].setAccessible(true);
+          fields[i].set(nUser, resultSet.getObject(i + 1));
+          list.add(nUser);
+        }
+      }
+    } catch (SQLException | IllegalAccessException e) {
+      e.printStackTrace();
+    }
+    return list;
   }
 
   @Override
@@ -82,7 +97,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
       resultSet.next();
       entity.setIdentifier(resultSet.getLong("id"));
     } catch (SQLException | IllegalAccessException e) {
-      e.fillInStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -115,7 +130,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
       if (ps.executeUpdate() == 0)
         throw new RuntimeException("Object is not added");
     } catch (SQLException e) {
-      e.fillInStackTrace();
+      e.printStackTrace();
     }
   }
 

@@ -16,6 +16,7 @@ import school21.spring.service.annotations.OrmEntity;
 @Data
 //@NoArgsConstructor
 @RequiredArgsConstructor
+@NoArgsConstructor
 @OrmEntity(table = "Users")
 public class User {
   @OrmColumnId

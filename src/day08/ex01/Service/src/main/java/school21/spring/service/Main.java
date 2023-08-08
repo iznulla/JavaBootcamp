@@ -1,5 +1,6 @@
 package school21.spring.service;
 import com.zaxxer.hikari.HikariDataSource;
+import java.util.List;
 import javax.sql.DataSource;
 import school21.spring.service.JdbcManager.HikDataSource;
 import school21.spring.service.models.User;
@@ -10,18 +11,18 @@ public class Main {
 
   public static void main(String[] args) {
 //    InitDb.init();
-    User user = new User("Inzn");
+    User user = new User();
 ////    JdbcUtils.preStatement()
 //    user.setIdentifier(1L);
     System.out.println(user);
     DataSource dataSource = HikDataSource.getDs();
     UsersRepositoryJdbcImpl usersRepository = new UsersRepositoryJdbcImpl(dataSource);
-    usersRepository.createSchema();
-    usersRepository.save(user);
-    user.setEmail("Laho");
+//    usersRepository.createSchema();
+//    usersRepository.save(user);
+//    user.setEmail("Laho");
 //    usersRepository.update(user);
 //    usersRepository.delete(2L);
-    User rrr = usersRepository.findById(96L);
-    System.out.println(rrr);
+    List<User> list = usersRepository.findAll();
+    list.forEach(System.out::println);
   }
 }
