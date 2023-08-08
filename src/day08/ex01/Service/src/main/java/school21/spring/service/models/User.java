@@ -1,6 +1,6 @@
 package school21.spring.service.models;
 
-
+import javax.annotation.processing.Processor;
 import lombok.Data;
 import lombok.Getter;
 
@@ -12,11 +12,10 @@ import school21.spring.service.annotations.OrmColumnId;
 import school21.spring.service.annotations.OrmEntity;
 
 @Data
-@OrmEntity(table = "Users")
+@OrmEntity(table = "User")
 public class User {
-  public User() {}
-  @Getter @Setter @OrmColumnId
+  @OrmColumnId
   private Long identifier;
-  @Getter @Setter @OrmColumn(name = "email", length = 128) @NonNull
+  @OrmColumn(name = "email", length = 128)
   private String email;
 }

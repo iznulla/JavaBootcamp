@@ -1,5 +1,6 @@
 package school21.spring.service.process;
 
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -19,21 +21,18 @@ import school21.spring.service.annotations.OrmColumnId;
 import school21.spring.service.annotations.OrmEntity;
 
 
-@SupportedAnnotationTypes("school21.spring.service.process.*")
+@SupportedAnnotationTypes("school21.spring.service.*")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class OrmProcessor  extends AbstractProcessor {
-
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     Elements elements = processingEnv.getElementUtils();
     StringBuilder fileBuffer = new StringBuilder();
-    System.out.println("ddssdffFFFFFFFFFFF");
+    System.out.println("EExxffFFFFFFF");
     for (Element entity : roundEnv.getElementsAnnotatedWith(OrmEntity.class)) {
       if (entity instanceof TypeElement) {
         OrmEntity ormEntity = entity.getAnnotation(OrmEntity.class);
-        fileBuffer.append(
-            String.format("drop table if exists %s;\n", ormEntity.table())
-        ).append(String.format(
+        fileBuffer.append(String.format(
             "create table if not exists %s (\n", ormEntity.table()));
         for (Element cols : entity.getEnclosedElements()) {
           if (cols.getAnnotation(OrmColumnId.class) != null) {
