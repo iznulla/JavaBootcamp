@@ -10,21 +10,11 @@ import school21.spring.service.repositories.UsersRepositoryJdbcImpl;
 public class Main {
 
   public static void main(String[] args) {
-//    InitDb.init();
-    User user = new User();
-////    JdbcUtils.preStatement()
-//    user.setIdentifier(1L);
+    User user = new User("a@l.ru");
     System.out.println(user);
     DataSource dataSource = HikDataSource.getDs();
     UsersRepositoryJdbcImpl usersRepository = new UsersRepositoryJdbcImpl(dataSource);
-//    usersRepository.createSchema();
-//    usersRepository.save(user);
-//    user.setEmail("Laho");
-//    usersRepository.update(user);
-//    usersRepository.delete(2L);
-    List<User> list = usersRepository.findAll();
-    User uu = usersRepository.findByEmail("Inzn").orElse(null);
-    System.out.println(uu);
-//    list.forEach(System.out::println);
+    usersRepository.createSchema();
+    usersRepository.save(user);
   }
 }

@@ -3,6 +3,7 @@ package school21.spring.service.process;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,6 +19,7 @@ import javax.lang.model.util.Elements;
 import school21.spring.service.annotations.OrmColumn;
 import school21.spring.service.annotations.OrmColumnId;
 import school21.spring.service.annotations.OrmEntity;
+import school21.spring.service.models.User;
 
 
 @SupportedAnnotationTypes("school21.spring.service.*")
@@ -25,14 +27,12 @@ import school21.spring.service.annotations.OrmEntity;
 public class OrmProcessor  extends AbstractProcessor {
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-    Elements elements = processingEnv.getElementUtils();
     StringBuilder fileBuffer = new StringBuilder();
     System.out.println("EExxffFFFFFFF");
     for (Element entity : roundEnv.getElementsAnnotatedWith(OrmEntity.class)) {
       if (entity instanceof TypeElement) {
         OrmEntity ormEntity = entity.getAnnotation(OrmEntity.class);
-        fileBuffer.append(String.format(
-            "create table if not exists %s (\n", ormEntity.table()));
+        fileBuffer.append(String.format("create table if not exists %s (\n", ormEntity.table()));
         for (Element cols : entity.getEnclosedElements()) {
           if (cols.getAnnotation(OrmColumnId.class) != null) {
             OrmColumnId ormColumnId = cols.getAnnotation(OrmColumnId.class);
@@ -42,11 +42,15 @@ public class OrmProcessor  extends AbstractProcessor {
                 .append(ormColumnId.autoincrement());
           }
           if (cols.getAnnotation(OrmColumn.class) != null) {
+            try {
             OrmColumn ormColumn = cols.getAnnotation(OrmColumn.class);
             fileBuffer.append(",\n\t")
                 .append(ormColumn.name())
                 .append(" ")
-                .append(typeToSqlType(getFieldType(elements, cols), ormColumn.length()));
+                .append(typeToSqlType(getFieldType(ormColumn.name()), ormColumn.length()));
+            } catch (ClassNotFoundException | NoSuchFieldException e) {
+              throw new RuntimeException(e);
+            }
           }
         }
       }
@@ -56,8 +60,13 @@ public class OrmProcessor  extends AbstractProcessor {
     return true;
   }
 
-  private String getFieldType(Elements elements, Element element) {
-    return elements.getTypeElement(element.asType().toString()).getSimpleName().toString();
+
+
+  private String getFieldType(String fieldName)
+      throws ClassNotFoundException, NoSuchFieldException {
+    Class<?> clazz = User.class;
+    Field field = clazz.getDeclaredField(fieldName);
+    return field.getType().getSimpleName();
   }
   private String typeToSqlType(String fType, int tLength) {
     String toSql;

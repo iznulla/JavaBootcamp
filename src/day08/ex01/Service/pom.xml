@@ -78,24 +78,21 @@
 
         <executions>
           <execution>
-            <id>annotations</id>
-            <phase>compile</phase>
+            <id>annotation</id>
             <goals>
               <goal>compile</goal>
             </goals>
             <configuration>
               <proc>only</proc>
               <annotationProcessors>
-                <process>
+                <annotationProcessor>
                   school21.spring.service.process.OrmProcessor
-                </process>
+                </annotationProcessor>
               </annotationProcessors>
             </configuration>
           </execution>
         </executions>
-
       </plugin>
-
     </plugins>
   </build>
 
