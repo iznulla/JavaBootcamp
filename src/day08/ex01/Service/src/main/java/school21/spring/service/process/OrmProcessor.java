@@ -61,7 +61,6 @@ public class OrmProcessor  extends AbstractProcessor {
   }
 
 
-
   private String getFieldType(String fieldName)
       throws ClassNotFoundException, NoSuchFieldException {
     Class<?> clazz = User.class;
@@ -70,7 +69,7 @@ public class OrmProcessor  extends AbstractProcessor {
   }
   private String typeToSqlType(String fType, int tLength) {
     String toSql;
-    if (fType.equals("String"))
+    if (fType.equals("string"))
       toSql = String.format("VARCHAR(%d)", tLength);
      else
       toSql = fType.toLowerCase();
