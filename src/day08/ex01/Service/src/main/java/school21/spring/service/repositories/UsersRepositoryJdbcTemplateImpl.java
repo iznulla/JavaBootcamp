@@ -1,7 +1,5 @@
 package school21.spring.service.repositories;
 
-
-
 import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
@@ -12,7 +10,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import school21.spring.service.models.User;
 
 public class UsersRepositoryJdbcTemplateImpl implements UsersRepository{
-
 
   private final NamedParameterJdbcTemplate jdbc;
   public UsersRepositoryJdbcTemplateImpl(DataSource ds) {

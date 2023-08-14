@@ -38,14 +38,17 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
       ps.setLong(1, id);
       ResultSet resultSet = ps.executeQuery();
       Field[] fields = user.getClass().getDeclaredFields();
-      resultSet.next();
-      long uId = resultSet.getLong("id");
-      for (int i = 1; i < fields.length; i++) {
-        fields[i].setAccessible(true);
-        fields[i].set(user, resultSet.getObject(i + 1).toString());
+      if (resultSet.next()) {
+        long uId = resultSet.getLong("id");
+        for (int i = 1; i < fields.length; i++) {
+          fields[i].setAccessible(true);
+          fields[i].set(user, resultSet.getObject(i + 1).toString());
+        }
+        user.setIdentifier(uId);
+        return user;
+      } else {
+        throw new NullPointerException("User Not Found");
       }
-      user.setIdentifier(uId);
-      return user;
     } catch (SQLException | IllegalAccessException e) {
       e.printStackTrace();
     }

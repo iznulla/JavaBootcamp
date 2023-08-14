@@ -15,7 +15,6 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
 import school21.spring.service.annotations.OrmColumn;
 import school21.spring.service.annotations.OrmColumnId;
 import school21.spring.service.annotations.OrmEntity;
@@ -32,7 +31,7 @@ public class OrmProcessor  extends AbstractProcessor {
     for (Element entity : roundEnv.getElementsAnnotatedWith(OrmEntity.class)) {
       if (entity instanceof TypeElement) {
         OrmEntity ormEntity = entity.getAnnotation(OrmEntity.class);
-        fileBuffer.append(String.format("create table if not exists %s (\n", ormEntity.table()));
+        fileBuffer.append(String.format("drop table if exists %s;\n", ormEntity.table())).append(String.format("create table if not exists %s (\n", ormEntity.table()));
         for (Element cols : entity.getEnclosedElements()) {
           if (cols.getAnnotation(OrmColumnId.class) != null) {
             OrmColumnId ormColumnId = cols.getAnnotation(OrmColumnId.class);
@@ -69,7 +68,7 @@ public class OrmProcessor  extends AbstractProcessor {
   }
   private String typeToSqlType(String fType, int tLength) {
     String toSql;
-    if (fType.equals("string"))
+    if (fType.equals("String"))
       toSql = String.format("VARCHAR(%d)", tLength);
      else
       toSql = fType.toLowerCase();
