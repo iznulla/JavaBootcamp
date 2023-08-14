@@ -1,4 +1,4 @@
-package school21.spring.service;
+package school21.spring.service.application;
 import java.util.List;
 import javax.sql.DataSource;
 import org.springframework.context.ApplicationContext;
